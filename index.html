@@ -35,90 +35,222 @@
             flex-direction: column;
         }
 
-        .status-bar {
-            width: 100%;
-            height: 44px;
-            background: #000000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-            position: fixed;
+        .page {
+            position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            z-index: 1000;
+            bottom: 0;
+            display: none;
+            flex-direction: column;
         }
 
-        .time {
-            font-size: 15px;
+        .page.active {
+            display: flex;
+        }
+
+        /* Page Accueil Styles */
+        .home-header {
+            padding: 50px 20px 20px;
+            background: #000000;
+        }
+
+        .account-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .account-flag {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #003DA5, #0055FF);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .account-label {
+            color: #8B8B8B;
+            font-size: 14px;
+        }
+
+        .balance-display {
+            font-size: 48px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+
+        .balance-display[contenteditable]:focus {
+            outline: none;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 0 10px;
+        }
+
+        .accounts-button {
+            background: #1C1C1C;
+            border: none;
+            border-radius: 24px;
+            padding: 12px 24px;
+            color: white;
+            font-size: 16px;
+            display: inline-block;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 15px;
+            padding: 20px;
+            justify-content: space-around;
+        }
+
+        .action-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .action-icon {
+            width: 56px;
+            height: 56px;
+            background: #1C1C1C;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-icon svg {
+            width: 28px;
+            height: 28px;
+            stroke: white;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .action-label {
+            font-size: 11px;
+            color: #8B8B8B;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .promo-card {
+            margin: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, #1C1C1C, #2C2C2C);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .promo-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .promo-content {
+            flex: 1;
+        }
+
+        .promo-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .promo-desc {
+            font-size: 14px;
+            color: #8B8B8B;
+        }
+
+        .transactions-list {
+            padding: 0 20px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .transaction-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #1C1C1C;
+        }
+
+        .transaction-avatar {
+            width: 40px;
+            height: 40px;
+            background: #5B41DF;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: white;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .transaction-arrow {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 16px;
+            height: 16px;
+            background: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .transaction-arrow svg {
+            width: 10px;
+            height: 10px;
+            stroke: white;
+            stroke-width: 2;
+        }
+
+        .transaction-info {
+            flex: 1;
+        }
+
+        .transaction-name {
+            font-size: 16px;
+            margin-bottom: 2px;
+        }
+
+        .transaction-time {
+            font-size: 13px;
+            color: #6B6B6B;
+        }
+
+        .transaction-amount {
+            font-size: 18px;
             font-weight: 600;
         }
 
-        .status-icons {
-            display: flex;
-            gap: 5px;
-            align-items: center;
-        }
-
-        .signal-bars {
-            display: flex;
-            gap: 2px;
-            align-items: flex-end;
-        }
-
-        .bar {
-            width: 3px;
-            background: white;
-            border-radius: 1px;
-        }
-
-        .bar:nth-child(1) { height: 4px; }
-        .bar:nth-child(2) { height: 6px; }
-        .bar:nth-child(3) { height: 8px; }
-        .bar:nth-child(4) { height: 10px; }
-
-        .wifi-icon {
-            width: 15px;
-            height: 15px;
-            margin-left: 4px;
-        }
-
-        .battery {
-            width: 27px;
-            height: 13px;
-            border: 1px solid rgba(255, 255, 255, 0.35);
-            border-radius: 4px;
-            position: relative;
-            margin-left: 5px;
-            padding: 1px;
-        }
-
-        .battery::after {
-            content: '';
-            position: absolute;
-            right: -4px;
-            top: 4px;
-            width: 1.5px;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.35);
-            border-radius: 0 1.5px 1.5px 0;
-        }
-
-        .battery-fill {
-            width: 100%;
-            height: 100%;
-            background: white;
-            border-radius: 2.5px;
-        }
-
+        /* Analytics Page Styles */
         .app-container {
             flex: 1;
             display: flex;
             flex-direction: column;
             width: 100%;
             background: #000000;
-            padding-top: 44px;
             overflow: hidden;
         }
 
@@ -126,7 +258,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 20px;
+            padding: 50px 20px 15px;
             background: #000000;
         }
 
@@ -136,7 +268,36 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .back-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: white;
+            stroke-width: 2;
+        }
+
+        .header-actions-pill {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #2C2C2C;
+            padding: 8px 16px;
+            border-radius: 20px;
+            height: 36px;
+        }
+
+        .header-action-icon {
+            width: 20px;
+            height: 20px;
+            opacity: 0.9;
+        }
+
+        .header-action-divider {
+            width: 1px;
+            height: 20px;
+            background: rgba(255,255,255,0.1);
         }
 
         .header-title {
@@ -148,6 +309,30 @@
             transform: translateX(-50%);
         }
 
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .header-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.8;
+            cursor: pointer;
+        }
+
+        .header-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: white;
+            stroke-width: 1.5;
+            fill: none;
+        }
+
         .content-area {
             flex: 1;
             overflow-y: auto;
@@ -156,28 +341,11 @@
             padding: 0 20px 100px;
         }
 
-        .swiper-container {
-            width: 100%;
-            overflow: hidden;
-            touch-action: pan-y;
-            margin-top: 20px;
-        }
-
-        .swiper-wrapper {
-            display: flex;
-            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-
-        .swiper-slide {
-            width: 100%;
-            flex-shrink: 0;
-        }
-
         .revenue-circle {
             position: relative;
             width: 260px;
             height: 260px;
-            margin: 0 auto 30px;
+            margin: 20px auto 30px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -274,6 +442,7 @@
             font-size: 15px;
             font-weight: 500;
             transition: all 0.3s ease;
+            cursor: pointer;
         }
 
         .time-btn.active {
@@ -304,6 +473,7 @@
             border: none;
             font-size: 15px;
             font-weight: 500;
+            cursor: pointer;
         }
 
         .category-item {
@@ -322,16 +492,26 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
             margin-right: 12px;
+            color: white;
+        }
+
+        .category-icon svg {
+            width: 22px;
+            height: 22px;
+            fill: white;
         }
 
         .icon-recharge {
-            background: linear-gradient(135deg, #00D4FF, #0099CC);
+            background: #00D4FF;
         }
 
         .icon-transfer {
-            background: linear-gradient(135deg, #7B61FF, #5B41DF);
+            background: #7B61FF;
+        }
+
+        .icon-general {
+            background: #4CAF50;
         }
 
         .category-info {
@@ -395,186 +575,452 @@
             padding: 8px;
             color: #6B6B6B;
             font-size: 11px;
+            cursor: pointer;
         }
 
         .nav-item.active {
             color: white;
         }
 
-        .nav-icon {
-            font-size: 22px;
+        .nav-item svg {
+            width: 24px;
+            height: 24px;
+            stroke-width: 1.5;
+        }
+
+        .month-swiper-container {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .month-swiper-wrapper {
+            display: flex;
+            transition: transform 0.4s ease-out;
+            will-change: transform;
+        }
+
+        .month-slide {
+            width: 100%;
+            flex-shrink: 0;
+        }
+
+        .swiper-container {
+            width: 100%;
+            overflow: hidden;
+            touch-action: pan-y;
+            margin-top: 20px;
+        }
+
+        .swiper-wrapper {
+            display: flex;
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .swiper-slide {
+            width: 100%;
+            flex-shrink: 0;
         }
     </style>
 </head>
 <body>
-    <div class="status-bar">
-        <div class="time" id="currentTime">22:17</div>
-        <div class="status-icons">
-            <div class="signal-bars">
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
+    <!-- Page Accueil -->
+    <div class="page" id="homePage">
+        <div class="home-header">
+            <div class="account-selector">
+                <div class="account-flag">EU</div>
+                <span class="account-label">Personnel · EUR</span>
             </div>
-            <svg class="wifi-icon" viewBox="0 0 15 15" fill="white">
-                <path d="M1 5.5c3.3-3.3 8.7-3.3 12 0l-1 1c-2.8-2.8-7.2-2.8-10 0l-1-1z"/>
-                <path d="M3 7.5c2.2-2.2 5.8-2.2 8 0l-1 1c-1.7-1.7-4.3-1.7-6 0l-1-1z"/>
-                <path d="M5 9.5c1.1-1.1 2.9-1.1 4 0l-2 2-2-2z"/>
-            </svg>
-            <div class="battery">
-                <div class="battery-fill"></div>
+            <div class="balance-display" contenteditable="true" id="mainBalance">101,97 €</div>
+            <button class="accounts-button">Comptes et Portefeuilles</button>
+        </div>
+
+        <div class="quick-actions">
+            <div class="action-button">
+                <div class="action-icon">
+                    <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </div>
+                <span class="action-label">Ajouter de<br>l'argent</span>
+            </div>
+            <div class="action-button">
+                <div class="action-icon">
+                    <svg viewBox="0 0 24 24"><polyline points="7 10 2 15 7 20"></polyline><polyline points="17 4 22 9 17 14"></polyline><line x1="22" y1="9" x2="10" y2="9"></line><line x1="2" y1="15" x2="14" y2="15"></line></svg>
+                </div>
+                <span class="action-label">Transférer</span>
+            </div>
+            <div class="action-button" onclick="showPage('analyticsPage')">
+                <div class="action-icon">
+                    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                </div>
+                <span class="action-label">Informations</span>
+            </div>
+            <div class="action-button">
+                <div class="action-icon">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+                </div>
+                <span class="action-label">Plus</span>
+            </div>
+        </div>
+
+        <div class="promo-card">
+            <div class="promo-icon">
+                <svg viewBox="0 0 48 48" fill="none" stroke="#00D4FF" stroke-width="2">
+                    <rect x="8" y="16" width="32" height="24" rx="2"></rect>
+                    <path d="M12 8h24l-4 8H16z"></path>
+                    <circle cx="24" cy="28" r="4"></circle>
+                </svg>
+            </div>
+            <div class="promo-content">
+                <div class="promo-title">Ami invité = 80 € gagnés</div>
+                <div class="promo-desc">80 € par ami inscrit avant le 30 septembre. Voir CG.</div>
+            </div>
+        </div>
+
+        <div class="transactions-list">
+            <div class="transaction-item">
+                <div class="transaction-avatar">
+                    L
+                    <div class="transaction-arrow">
+                        <svg viewBox="0 0 12 12" fill="none"><path d="M2 6h8m0 0L7 3m3 3L7 9" /></svg>
+                    </div>
+                </div>
+                <div class="transaction-info">
+                    <div class="transaction-name">Love</div>
+                    <div class="transaction-time">Il y a quelques instants</div>
+                </div>
+                <div class="transaction-amount">-30 €</div>
+            </div>
+            <div class="transaction-item">
+                <div class="transaction-avatar">
+                    L
+                    <div class="transaction-arrow">
+                        <svg viewBox="0 0 12 12" fill="none"><path d="M2 6h8m0 0L7 3m3 3L7 9" /></svg>
+                    </div>
+                </div>
+                <div class="transaction-info">
+                    <div class="transaction-name">Love</div>
+                    <div class="transaction-time">Hier, 19:16</div>
+                </div>
+                <div class="transaction-amount">-20 €</div>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item active">
+                <svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                </svg>
+                <span>Accueil</span>
+            </div>
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
+                <span>Investir</span>
+            </div>
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+                <span>Virements</span>
+            </div>
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M22 12c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2c1.19 0 2.34.21 3.41.6l.5-.6h2.17l-.58.69c2.5 1.68 4.14 4.53 4.14 7.81"/>
+                    <path d="M12 8v8M9 10h6"/>
+                </svg>
+                <span>Cryptos</span>
+            </div>
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+                <span>RevPoints</span>
             </div>
         </div>
     </div>
 
-    <div class="app-container">
-        <div class="app-header">
-            <div class="back-btn">←</div>
-            <div class="header-title">Revenus</div>
-            <div style="width: 30px;"></div>
-        </div>
+    <!-- Page Analytics -->
+    <div class="page active" id="analyticsPage">
+        <div class="app-container">
+            <div class="app-header">
+                <div class="back-btn" onclick="showPage('homePage')">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M19 12H5M5 12l7 7m-7-7l7-7"/>
+                    </svg>
+                </div>
+                <div style="flex: 1;"></div>
+                <div class="header-actions-pill">
+                    <svg class="header-action-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <path d="M3 12c0-1.1.9-2 2-2s2 .9 2 2c0 1.1-.9 2-2 2s-2-.9-2-2zM17 12c0-1.1.9-2 2-2s2 .9 2 2c0 1.1-.9 2-2 2s-2-.9-2-2z"/>
+                        <path d="M3 12h4M17 12h4M7 8l5 8 5-8"/>
+                    </svg>
+                    <div class="header-action-divider"></div>
+                    <svg class="header-action-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
+                        <rect x="3" y="3" width="7" height="9" rx="1"/>
+                        <rect x="14" y="3" width="7" height="5" rx="1"/>
+                        <rect x="14" y="12" width="7" height="9" rx="1"/>
+                        <rect x="3" y="16" width="7" height="5" rx="1"/>
+                    </svg>
+                    <div class="header-action-divider"></div>
+                    <svg class="header-action-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M8 12s1.5 2 4 2 4-2 4-2"/>
+                        <path d="M12 8v8"/>
+                        <circle cx="12" cy="4" r="1" fill="white"/>
+                    </svg>
+                </div>
+            </div>
 
-        <div class="content-area">
-            <div class="swiper-container">
-                <div class="swiper-wrapper" id="swiperWrapper">
-                    <div class="swiper-slide">
-                        <div class="revenue-circle">
-                            <div class="circle-bg"></div>
-                            <div class="circle-inner">
-                                <div class="revenue-label">Revenus</div>
-                                <div class="revenue-amount" contenteditable="true" data-period="1s">2 590 €</div>
-                                <div class="period">Cette semaine</div>
+            <div class="content-area">
+                <div class="swiper-container">
+                    <div class="swiper-wrapper" id="swiperWrapper">
+                        <!-- 1 semaine -->
+                        <div class="swiper-slide" data-period="week">
+                            <div class="revenue-circle">
+                                <div class="circle-bg"></div>
+                                <div class="circle-inner">
+                                    <div class="revenue-label">Revenus</div>
+                                    <div class="revenue-amount" contenteditable="true" data-period="1s">2 590 €</div>
+                                    <div class="period">Cette semaine</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="swiper-slide">
-                        <div class="revenue-circle">
-                            <div class="circle-bg"></div>
-                            <div class="circle-inner">
-                                <div class="revenue-label">Revenus</div>
-                                <div class="revenue-amount" contenteditable="true" data-period="1m">10 361 €</div>
-                                <div class="period">Ce mois-ci</div>
+                        <!-- Mois - Février à Septembre -->
+                        <div class="swiper-slide" data-period="month">
+                            <div class="month-swiper-container">
+                                <div class="month-swiper-wrapper" id="monthSwiperWrapper">
+                                    <div class="month-slide" data-month="fevrier">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 320deg, #1C1C1C 320deg)"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">416 €</div>
+                                                <div class="period">février</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="month-slide" data-month="mars">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg" style="background: conic-gradient(from -90deg, #7B61FF 0deg 280deg, #00D4FF 280deg 340deg, #1C1C1C 340deg)"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">7 065 €</div>
+                                                <div class="period">mars</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="month-slide" data-month="avril">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 260deg, #7B61FF 260deg 320deg, #1C1C1C 320deg)"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">1 277 €</div>
+                                                <div class="period">avril</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="month-slide" data-month="mai">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 200deg, #7B61FF 200deg 280deg, #4CAF50 280deg 300deg, #1C1C1C 300deg)"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">2 865 €</div>
+                                                <div class="period">mai</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="month-slide" data-month="juin">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 216deg, #7B61FF 216deg 288deg, #1C1C1C 288deg)"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">3 567 €</div>
+                                                <div class="period">juin</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="month-slide" data-month="juillet">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 230deg, #7B61FF 230deg 290deg, #1C1C1C 290deg)"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">4 789 €</div>
+                                                <div class="period">juillet</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="month-slide" data-month="aout">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 210deg, #7B61FF 210deg 285deg, #1C1C1C 285deg)"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">5 456 €</div>
+                                                <div class="period">août</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="month-slide active" data-month="septembre">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">10 361 €</div>
+                                                <div class="period">septembre</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="swiper-slide">
-                        <div class="revenue-circle">
-                            <div class="circle-bg"></div>
-                            <div class="circle-inner">
-                                <div class="revenue-label">Revenus</div>
-                                <div class="revenue-amount" contenteditable="true" data-period="6m">62 166 €</div>
-                                <div class="period">Ces 6 derniers mois</div>
+                        <!-- 6 mois -->
+                        <div class="swiper-slide" data-period="sixmonths">
+                            <div class="revenue-circle">
+                                <div class="circle-bg"></div>
+                                <div class="circle-inner">
+                                    <div class="revenue-label">Revenus</div>
+                                    <div class="revenue-amount" contenteditable="true" data-period="6m">62 166 €</div>
+                                    <div class="period">Ces 6 derniers mois</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="swiper-slide">
-                        <div class="revenue-circle">
-                            <div class="circle-bg"></div>
-                            <div class="circle-inner">
-                                <div class="revenue-label">Revenus</div>
-                                <div class="revenue-amount" contenteditable="true" data-period="1a">124 332 €</div>
-                                <div class="period">Cette année</div>
+                        <!-- 1 an -->
+                        <div class="swiper-slide" data-period="year">
+                            <div class="revenue-circle">
+                                <div class="circle-bg"></div>
+                                <div class="circle-inner">
+                                    <div class="revenue-label">Revenus</div>
+                                    <div class="revenue-amount" contenteditable="true" data-period="1a">124 332 €</div>
+                                    <div class="period">Cette année</div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="swipe-indicator">
-                <div class="dot"></div>
-                <div class="dot active"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-            </div>
-
-            <div class="time-selector">
-                <button class="time-btn" data-index="0">1 s</button>
-                <button class="time-btn active" data-index="1">1 m</button>
-                <button class="time-btn" data-index="2">6 m</button>
-                <button class="time-btn" data-index="3">1 a</button>
-            </div>
-
-            <div class="category-section">
-                <div class="category-header">
-                    <div class="category-title">Par catégorie</div>
-                    <button class="manage-btn">Gérer</button>
+                <div class="swipe-indicator">
+                    <div class="dot"></div>
+                    <div class="dot active"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
                 </div>
 
-                <div class="category-item">
-                    <div class="category-icon icon-recharge">💳</div>
-                    <div class="category-info">
-                        <div class="category-name">Recharges</div>
-                        <div class="transaction-count"><span id="rechargeCount">17</span> transactions</div>
-                    </div>
-                    <div class="category-amount">
-                        <div class="amount-value" contenteditable="true" id="rechargeAmount">+7 021 €</div>
-                        <div class="percentage" id="rechargePercent">68%</div>
-                    </div>
+                <div class="time-selector">
+                    <button class="time-btn" data-index="0">1 s</button>
+                    <button class="time-btn active" data-index="1">1 m</button>
+                    <button class="time-btn" data-index="2">6 m</button>
+                    <button class="time-btn" data-index="3">1 a</button>
                 </div>
 
-                <div class="category-item">
-                    <div class="category-icon icon-transfer">💸</div>
-                    <div class="category-info">
-                        <div class="category-name">Virements</div>
-                        <div class="transaction-count"><span id="transferCount">24</span> transactions</div>
+                <div class="category-section">
+                    <div class="category-header">
+                        <div class="category-title">Par catégorie</div>
+                        <button class="manage-btn">Gérer</button>
                     </div>
-                    <div class="category-amount">
-                        <div class="amount-value" contenteditable="true" id="transferAmount">+2 485 €</div>
-                        <div class="percentage" id="transferPercent">24%</div>
+
+                    <div class="category-item">
+                        <div class="category-icon icon-recharge">
+                            <img src="recharges.png" alt="Recharges" style="width: 44px; height: 44px; border-radius: 50%;">
+                        </div>
+                        <div class="category-info">
+                            <div class="category-name">Recharges</div>
+                            <div class="transaction-count"><span id="rechargeCount">17</span> transactions</div>
+                        </div>
+                        <div class="category-amount">
+                            <div class="amount-value" contenteditable="true" id="rechargeAmount">+7 021 €</div>
+                            <div class="percentage" id="rechargePercent">68%</div>
+                        </div>
+                    </div>
+
+                    <div class="category-item">
+                        <div class="category-icon icon-transfer">
+                            <img src="virements.png" alt="Virements" style="width: 44px; height: 44px; border-radius: 50%;">
+                        </div>
+                        <div class="category-info">
+                            <div class="category-name">Virements</div>
+                            <div class="transaction-count"><span id="transferCount">24</span> transactions</div>
+                        </div>
+                        <div class="category-amount">
+                            <div class="amount-value" contenteditable="true" id="transferAmount">+2 485 €</div>
+                            <div class="percentage" id="transferPercent">24%</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="bottom-nav">
-        <div class="nav-item">
-            <span class="nav-icon">🏠</span>
-            <span>Accueil</span>
-        </div>
-        <div class="nav-item active">
-            <span class="nav-icon">📊</span>
-            <span>Analytics</span>
-        </div>
-        <div class="nav-item">
-            <span class="nav-icon">💳</span>
-            <span>Cartes</span>
-        </div>
-        <div class="nav-item">
-            <span class="nav-icon">💰</span>
-            <span>Paiements</span>
-        </div>
-        <div class="nav-item">
-            <span class="nav-icon">⚡</span>
-            <span>Hub</span>
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="showPage('homePage')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                <span>Accueil</span>
+            </div>
+            <div class="nav-item active">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+                <span>Analytics</span>
+            </div>
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                    <line x1="1" y1="10" x2="23" y2="10"></line>
+                </svg>
+                <span>Cartes</span>
+            </div>
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                    <path d="M2 17l10 5 10-5"></path>
+                    <path d="M2 12l10 5 10-5"></path>
+                </svg>
+                <span>Paiements</span>
+            </div>
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
+                <span>Hub</span>
+            </div>
         </div>
     </div>
 
     <script>
-        function updateTime() {
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            document.getElementById('currentTime').textContent = hours + ':' + minutes;
+        // Navigation entre pages
+        function showPage(pageId) {
+            console.log('Navigating to:', pageId);
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
         }
-        updateTime();
-        setInterval(updateTime, 1000);
 
+        // Main Swiper functionality
         let currentIndex = 1;
         const wrapper = document.getElementById('swiperWrapper');
         const slides = document.querySelectorAll('.swiper-slide');
         const dots = document.querySelectorAll('.dot');
         const timeButtons = document.querySelectorAll('.time-btn');
         
+        // Month swiper variables
+        let currentMonthIndex = 0; // Start at February
+        const monthSlides = document.querySelectorAll('.month-slide');
+        
         let startX = 0;
         let currentX = 0;
         let isDragging = false;
         let startTransform = 0;
+        let isMonthSwiping = false;
 
         function goToSlide(index) {
+            if (!wrapper || !slides.length) return;
             currentIndex = Math.max(0, Math.min(index, slides.length - 1));
             const offset = -currentIndex * 100;
             wrapper.style.transform = 'translateX(' + offset + '%)';
@@ -587,41 +1033,198 @@
                 btn.classList.toggle('active', i === currentIndex);
             });
             
+            // Show/hide month swiper when on month view
+            if(currentIndex === 1) {
+                showMonth(currentMonthIndex);
+            }
+            
             updatePercentages();
         }
 
-        wrapper.addEventListener('touchstart', (e) => {
-            startX = e.touches[0].clientX;
-            isDragging = true;
-            startTransform = currentIndex * 100;
-            wrapper.style.transition = 'none';
-        });
-
-        wrapper.addEventListener('touchmove', (e) => {
-            if (!isDragging) return;
-            currentX = e.touches[0].clientX;
-            const diff = startX - currentX;
-            const percentDiff = (diff / window.innerWidth) * 100;
-            const newTransform = -(startTransform + percentDiff);
-            wrapper.style.transform = 'translateX(' + newTransform + '%)';
-        });
-
-        wrapper.addEventListener('touchend', (e) => {
-            if (!isDragging) return;
-            isDragging = false;
-            wrapper.style.transition = 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+        function showMonth(index, instant = false) {
+            currentMonthIndex = Math.max(0, Math.min(index, monthSlides.length - 1));
             
-            const diff = startX - currentX;
-            const threshold = window.innerWidth * 0.2;
-            
-            if (diff > threshold && currentIndex < slides.length - 1) {
-                goToSlide(currentIndex + 1);
-            } else if (diff < -threshold && currentIndex > 0) {
-                goToSlide(currentIndex - 1);
-            } else {
-                goToSlide(currentIndex);
+            // Apply transform to slide horizontally
+            const monthWrapper = document.getElementById('monthSwiperWrapper');
+            if(monthWrapper) {
+                if(instant) {
+                    monthWrapper.style.transition = 'none';
+                } else {
+                    monthWrapper.style.transition = 'transform 0.4s ease-out';
+                }
+                const offset = -currentMonthIndex * 100;
+                monthWrapper.style.transform = `translateX(${offset}%)`;
             }
-        });
+            
+            updatePercentages();
+        }
+
+        // Month swiper touch events
+        if(monthSlides.length > 0) {
+            const monthContainer = document.querySelector('.month-swiper-container');
+            const monthWrapper = document.getElementById('monthSwiperWrapper');
+            
+            if(monthContainer && monthWrapper) {
+                let monthStartX = 0;
+                let monthCurrentX = 0;
+                let monthStartTime = 0;
+                let velocity = 0;
+                
+                monthContainer.addEventListener('touchstart', (e) => {
+                    if(currentIndex !== 1) return;
+                    monthStartX = e.touches[0].clientX;
+                    monthCurrentX = monthStartX;
+                    monthStartTime = Date.now();
+                    isMonthSwiping = true;
+                    monthWrapper.style.transition = 'none';
+                });
+
+                monthContainer.addEventListener('touchmove', (e) => {
+                    if(!isMonthSwiping || currentIndex !== 1) return;
+                    e.preventDefault();
+                    
+                    const previousX = monthCurrentX;
+                    monthCurrentX = e.touches[0].clientX;
+                    velocity = monthCurrentX - previousX;
+                    
+                    const diff = monthCurrentX - monthStartX;
+                    const currentOffset = -currentMonthIndex * 100;
+                    const dragOffset = (diff / monthContainer.offsetWidth) * 100;
+                    const newOffset = currentOffset + dragOffset;
+                    
+                    // Add resistance at edges
+                    if((currentMonthIndex === 0 && diff > 0) || 
+                       (currentMonthIndex === monthSlides.length - 1 && diff < 0)) {
+                        monthWrapper.style.transform = `translateX(${currentOffset + dragOffset * 0.3}%)`;
+                    } else {
+                        monthWrapper.style.transform = `translateX(${newOffset}%)`;
+                    }
+                });
+
+                monthContainer.addEventListener('touchend', (e) => {
+                    if(!isMonthSwiping || currentIndex !== 1) return;
+                    isMonthSwiping = false;
+                    
+                    const diff = monthCurrentX - monthStartX;
+                    const timeDiff = Date.now() - monthStartTime;
+                    const speed = Math.abs(diff / timeDiff);
+                    
+                    // Use velocity and speed for better swipe detection
+                    const threshold = monthContainer.offsetWidth * 0.2;
+                    const shouldSwipe = Math.abs(diff) > threshold || speed > 0.5;
+                    
+                    monthWrapper.style.transition = 'transform 0.4s ease-out';
+                    
+                    if (shouldSwipe) {
+                        if (diff < 0 && currentMonthIndex < monthSlides.length - 1) {
+                            showMonth(currentMonthIndex + 1);
+                        } else if (diff > 0 && currentMonthIndex > 0) {
+                            showMonth(currentMonthIndex - 1);
+                        } else {
+                            showMonth(currentMonthIndex);
+                        }
+                    } else {
+                        showMonth(currentMonthIndex);
+                    }
+                });
+
+                // Mouse events for desktop testing
+                let mouseDown = false;
+                
+                monthContainer.addEventListener('mousedown', (e) => {
+                    if(currentIndex !== 1) return;
+                    monthStartX = e.clientX;
+                    monthCurrentX = monthStartX;
+                    monthStartTime = Date.now();
+                    mouseDown = true;
+                    monthWrapper.style.transition = 'none';
+                    e.preventDefault();
+                });
+
+                document.addEventListener('mousemove', (e) => {
+                    if(!mouseDown || currentIndex !== 1) return;
+                    
+                    const previousX = monthCurrentX;
+                    monthCurrentX = e.clientX;
+                    velocity = monthCurrentX - previousX;
+                    
+                    const diff = monthCurrentX - monthStartX;
+                    const currentOffset = -currentMonthIndex * 100;
+                    const dragOffset = (diff / monthContainer.offsetWidth) * 100;
+                    const newOffset = currentOffset + dragOffset;
+                    
+                    if((currentMonthIndex === 0 && diff > 0) || 
+                       (currentMonthIndex === monthSlides.length - 1 && diff < 0)) {
+                        monthWrapper.style.transform = `translateX(${currentOffset + dragOffset * 0.3}%)`;
+                    } else {
+                        monthWrapper.style.transform = `translateX(${newOffset}%)`;
+                    }
+                });
+
+                document.addEventListener('mouseup', (e) => {
+                    if(!mouseDown || currentIndex !== 1) return;
+                    mouseDown = false;
+                    
+                    const diff = monthCurrentX - monthStartX;
+                    const timeDiff = Date.now() - monthStartTime;
+                    const speed = Math.abs(diff / timeDiff);
+                    
+                    const threshold = monthContainer.offsetWidth * 0.2;
+                    const shouldSwipe = Math.abs(diff) > threshold || speed > 0.5;
+                    
+                    monthWrapper.style.transition = 'transform 0.4s ease-out';
+                    
+                    if (shouldSwipe) {
+                        if (diff < 0 && currentMonthIndex < monthSlides.length - 1) {
+                            showMonth(currentMonthIndex + 1);
+                        } else if (diff > 0 && currentMonthIndex > 0) {
+                            showMonth(currentMonthIndex - 1);
+                        } else {
+                            showMonth(currentMonthIndex);
+                        }
+                    } else {
+                        showMonth(currentMonthIndex);
+                    }
+                });
+            }
+        }
+
+        // Main swiper touch events
+        if(wrapper) {
+            wrapper.addEventListener('touchstart', (e) => {
+                if(isMonthSwiping) return;
+                startX = e.touches[0].clientX;
+                isDragging = true;
+                startTransform = currentIndex * 100;
+                wrapper.style.transition = 'none';
+            });
+
+            wrapper.addEventListener('touchmove', (e) => {
+                if (!isDragging || isMonthSwiping) return;
+                currentX = e.touches[0].clientX;
+                const diff = startX - currentX;
+                const percentDiff = (diff / window.innerWidth) * 100;
+                const newTransform = -(startTransform + percentDiff);
+                wrapper.style.transform = 'translateX(' + newTransform + '%)';
+            });
+
+            wrapper.addEventListener('touchend', (e) => {
+                if (!isDragging || isMonthSwiping) return;
+                isDragging = false;
+                wrapper.style.transition = 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                
+                const diff = startX - currentX;
+                const threshold = window.innerWidth * 0.2;
+                
+                if (diff > threshold && currentIndex < slides.length - 1) {
+                    goToSlide(currentIndex + 1);
+                } else if (diff < -threshold && currentIndex > 0) {
+                    goToSlide(currentIndex - 1);
+                } else {
+                    goToSlide(currentIndex);
+                }
+            });
+        }
 
         timeButtons.forEach((btn, index) => {
             btn.addEventListener('click', () => {
@@ -630,32 +1233,58 @@
         });
 
         function formatNumber(value) {
-            const number = value.replace(/[^\d]/g, '');
-            return number.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+            const number = value.replace(/[^\d,\.]/g, '');
+            const parts = number.split(/[,\.]/);
+            if (parts.length > 1) {
+                return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ',' + parts[1].substring(0, 2);
+            }
+            return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
         }
 
         function updatePercentages() {
-            const currentRevenue = slides[currentIndex].querySelector('.revenue-amount');
-            const mainValue = parseInt(currentRevenue.textContent.replace(/[^\d]/g, '')) || 0;
-            const rechargeValue = parseInt(document.getElementById('rechargeAmount').textContent.replace(/[^\d]/g, '')) || 0;
-            const transferValue = parseInt(document.getElementById('transferAmount').textContent.replace(/[^\d]/g, '')) || 0;
+            let mainValue = 0;
             
-            if (mainValue > 0) {
+            // Get the current revenue value based on view
+            if(currentIndex === 1 && monthSlides[currentMonthIndex]) {
+                // Month view - get value from current month
+                const monthRevenue = monthSlides[currentMonthIndex].querySelector('.revenue-amount');
+                if(monthRevenue) {
+                    mainValue = parseFloat(monthRevenue.textContent.replace(/[^\d]/g, '')) || 0;
+                }
+            } else if(slides[currentIndex]) {
+                // Other views
+                const currentRevenue = slides[currentIndex].querySelector('.revenue-amount');
+                if(currentRevenue) {
+                    mainValue = parseFloat(currentRevenue.textContent.replace(/[^\d]/g, '')) || 0;
+                }
+            }
+            
+            const rechargeAmount = document.getElementById('rechargeAmount');
+            const transferAmount = document.getElementById('transferAmount');
+            
+            if(rechargeAmount && transferAmount && mainValue > 0) {
+                const rechargeValue = parseFloat(rechargeAmount.textContent.replace(/[^\d]/g, '')) || 0;
+                const transferValue = parseFloat(transferAmount.textContent.replace(/[^\d]/g, '')) || 0;
+                
                 const rechargePercent = Math.round((rechargeValue / mainValue) * 100);
                 const transferPercent = Math.round((transferValue / mainValue) * 100);
                 
-                document.getElementById('rechargePercent').textContent = rechargePercent + '%';
-                document.getElementById('transferPercent').textContent = transferPercent + '%';
+                const rechargePercentEl = document.getElementById('rechargePercent');
+                const transferPercentEl = document.getElementById('transferPercent');
+                
+                if(rechargePercentEl) rechargePercentEl.textContent = rechargePercent + '%';
+                if(transferPercentEl) transferPercentEl.textContent = transferPercent + '%';
             }
         }
 
-        document.querySelectorAll('.revenue-amount, #rechargeAmount, #transferAmount').forEach(element => {
+        // Format editable amounts
+        document.querySelectorAll('.revenue-amount, #rechargeAmount, #transferAmount, #mainBalance').forEach(element => {
             element.addEventListener('focus', function() {
-                this.textContent = this.textContent.replace(/[^\d]/g, '');
+                this.textContent = this.textContent.replace(/[^\d,\.]/g, '');
             });
             
             element.addEventListener('blur', function() {
-                const value = this.textContent.replace(/[^\d]/g, '');
+                const value = this.textContent.replace(/[^\d,\.]/g, '');
                 if (value) {
                     const formatted = formatNumber(value);
                     const isCategory = (this.id === 'rechargeAmount' || this.id === 'transferAmount');
@@ -675,14 +1304,14 @@
             });
         });
 
-        goToSlide(1);
+        // Initialize
+        if(wrapper && slides.length > 0) {
+            goToSlide(1);
+        }
+        if(monthSlides.length > 0) {
+            showMonth(7); // Start at September
+        }
         updatePercentages();
-
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                window.scrollTo(0, 1);
-            }, 0);
-        });
     </script>
 </body>
 </html>
