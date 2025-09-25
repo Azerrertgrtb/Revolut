@@ -571,13 +571,42 @@
 
         .month-swiper-wrapper {
             display: flex;
-            transition: transform 0.4s ease-out;
-            will-change: transform;
+            width: 100%;
+            height: 100%;
+            position: relative;
         }
 
         .month-slide {
             width: 100%;
             flex-shrink: 0;
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .month-slide.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: scale(0.95);
+            }
         }
 
         .swiper-container {
@@ -953,16 +982,14 @@
         function showMonth(index, instant = false) {
             currentMonthIndex = Math.max(0, Math.min(index, monthSlides.length - 1));
             
-            // Apply transform to slide horizontally
-            const monthWrapper = document.getElementById('monthSwiperWrapper');
-            if(monthWrapper) {
-                if(instant) {
-                    monthWrapper.style.transition = 'none';
-                } else {
-                    monthWrapper.style.transition = 'transform 0.4s ease-out';
-                }
-                const offset = -currentMonthIndex * 100;
-                monthWrapper.style.transform = `translateX(${offset}%)`;
+            // Hide all slides first
+            monthSlides.forEach(slide => {
+                slide.style.display = 'none';
+            });
+            
+            // Show only the current slide
+            if(monthSlides[currentMonthIndex]) {
+                monthSlides[currentMonthIndex].style.display = 'block';
             }
             
             updatePercentages();
@@ -971,69 +998,56 @@
         // Month swiper touch events
         if(monthSlides.length > 0) {
             const monthContainer = document.querySelector('.month-swiper-container');
-            const monthWrapper = document.getElementById('monthSwiperWrapper');
             
-            if(monthContainer && monthWrapper) {
+            if(monthContainer) {
                 let monthStartX = 0;
                 let monthCurrentX = 0;
-                let monthStartTime = 0;
-                let velocity = 0;
+                let isSwiping = false;
                 
                 monthContainer.addEventListener('touchstart', (e) => {
                     if(currentIndex !== 1) return;
                     monthStartX = e.touches[0].clientX;
                     monthCurrentX = monthStartX;
-                    monthStartTime = Date.now();
-                    isMonthSwiping = true;
-                    monthWrapper.style.transition = 'none';
+                    isSwiping = false;
                 });
 
                 monthContainer.addEventListener('touchmove', (e) => {
-                    if(!isMonthSwiping || currentIndex !== 1) return;
+                    if(currentIndex !== 1) return;
                     e.preventDefault();
-                    
-                    const previousX = monthCurrentX;
                     monthCurrentX = e.touches[0].clientX;
-                    velocity = monthCurrentX - previousX;
-                    
-                    const diff = monthCurrentX - monthStartX;
-                    const currentOffset = -currentMonthIndex * 100;
-                    const dragOffset = (diff / monthContainer.offsetWidth) * 100;
-                    const newOffset = currentOffset + dragOffset;
-                    
-                    // Add resistance at edges
-                    if((currentMonthIndex === 0 && diff > 0) || 
-                       (currentMonthIndex === monthSlides.length - 1 && diff < 0)) {
-                        monthWrapper.style.transform = `translateX(${currentOffset + dragOffset * 0.3}%)`;
-                    } else {
-                        monthWrapper.style.transform = `translateX(${newOffset}%)`;
-                    }
+                    const diff = Math.abs(monthCurrentX - monthStartX);
+                    if(diff > 10) isSwiping = true;
                 });
 
                 monthContainer.addEventListener('touchend', (e) => {
-                    if(!isMonthSwiping || currentIndex !== 1) return;
-                    isMonthSwiping = false;
+                    if(!isSwiping || currentIndex !== 1) return;
                     
                     const diff = monthCurrentX - monthStartX;
-                    const timeDiff = Date.now() - monthStartTime;
-                    const speed = Math.abs(diff / timeDiff);
+                    const threshold = 50; // Reduced threshold for quicker response
                     
-                    // Use velocity and speed for better swipe detection
-                    const threshold = monthContainer.offsetWidth * 0.2;
-                    const shouldSwipe = Math.abs(diff) > threshold || speed > 0.5;
-                    
-                    monthWrapper.style.transition = 'transform 0.4s ease-out';
-                    
-                    if (shouldSwipe) {
-                        if (diff < 0 && currentMonthIndex < monthSlides.length - 1) {
-                            showMonth(currentMonthIndex + 1);
-                        } else if (diff > 0 && currentMonthIndex > 0) {
-                            showMonth(currentMonthIndex - 1);
-                        } else {
-                            showMonth(currentMonthIndex);
+                    if (Math.abs(diff) > threshold) {
+                        // Hide current slide with fade out
+                        if(monthSlides[currentMonthIndex]) {
+                            monthSlides[currentMonthIndex].style.animation = 'fadeOut 0.2s ease-out';
+                            setTimeout(() => {
+                                monthSlides[currentMonthIndex].style.display = 'none';
+                                monthSlides[currentMonthIndex].style.animation = '';
+                                
+                                // Change month
+                                if (diff < 0 && currentMonthIndex < monthSlides.length - 1) {
+                                    currentMonthIndex++;
+                                } else if (diff > 0 && currentMonthIndex > 0) {
+                                    currentMonthIndex--;
+                                }
+                                
+                                // Show new slide with fade in
+                                if(monthSlides[currentMonthIndex]) {
+                                    monthSlides[currentMonthIndex].style.display = 'block';
+                                    monthSlides[currentMonthIndex].style.animation = 'fadeIn 0.3s ease-out';
+                                }
+                                updatePercentages();
+                            }, 200);
                         }
-                    } else {
-                        showMonth(currentMonthIndex);
                     }
                 });
 
@@ -1044,57 +1058,61 @@
                     if(currentIndex !== 1) return;
                     monthStartX = e.clientX;
                     monthCurrentX = monthStartX;
-                    monthStartTime = Date.now();
                     mouseDown = true;
-                    monthWrapper.style.transition = 'none';
+                    isSwiping = false;
                     e.preventDefault();
                 });
 
                 document.addEventListener('mousemove', (e) => {
                     if(!mouseDown || currentIndex !== 1) return;
-                    
-                    const previousX = monthCurrentX;
                     monthCurrentX = e.clientX;
-                    velocity = monthCurrentX - previousX;
-                    
-                    const diff = monthCurrentX - monthStartX;
-                    const currentOffset = -currentMonthIndex * 100;
-                    const dragOffset = (diff / monthContainer.offsetWidth) * 100;
-                    const newOffset = currentOffset + dragOffset;
-                    
-                    if((currentMonthIndex === 0 && diff > 0) || 
-                       (currentMonthIndex === monthSlides.length - 1 && diff < 0)) {
-                        monthWrapper.style.transform = `translateX(${currentOffset + dragOffset * 0.3}%)`;
-                    } else {
-                        monthWrapper.style.transform = `translateX(${newOffset}%)`;
-                    }
+                    const diff = Math.abs(monthCurrentX - monthStartX);
+                    if(diff > 10) isSwiping = true;
                 });
 
                 document.addEventListener('mouseup', (e) => {
-                    if(!mouseDown || currentIndex !== 1) return;
+                    if(!mouseDown || !isSwiping || currentIndex !== 1) return;
                     mouseDown = false;
                     
                     const diff = monthCurrentX - monthStartX;
-                    const timeDiff = Date.now() - monthStartTime;
-                    const speed = Math.abs(diff / timeDiff);
+                    const threshold = 50;
                     
-                    const threshold = monthContainer.offsetWidth * 0.2;
-                    const shouldSwipe = Math.abs(diff) > threshold || speed > 0.5;
-                    
-                    monthWrapper.style.transition = 'transform 0.4s ease-out';
-                    
-                    if (shouldSwipe) {
-                        if (diff < 0 && currentMonthIndex < monthSlides.length - 1) {
-                            showMonth(currentMonthIndex + 1);
-                        } else if (diff > 0 && currentMonthIndex > 0) {
-                            showMonth(currentMonthIndex - 1);
-                        } else {
-                            showMonth(currentMonthIndex);
+                    if (Math.abs(diff) > threshold) {
+                        // Hide current slide with fade out
+                        if(monthSlides[currentMonthIndex]) {
+                            monthSlides[currentMonthIndex].style.animation = 'fadeOut 0.2s ease-out';
+                            setTimeout(() => {
+                                monthSlides[currentMonthIndex].style.display = 'none';
+                                monthSlides[currentMonthIndex].style.animation = '';
+                                
+                                // Change month
+                                if (diff < 0 && currentMonthIndex < monthSlides.length - 1) {
+                                    currentMonthIndex++;
+                                } else if (diff > 0 && currentMonthIndex > 0) {
+                                    currentMonthIndex--;
+                                }
+                                
+                                // Show new slide with fade in
+                                if(monthSlides[currentMonthIndex]) {
+                                    monthSlides[currentMonthIndex].style.display = 'block';
+                                    monthSlides[currentMonthIndex].style.animation = 'fadeIn 0.3s ease-out';
+                                }
+                                updatePercentages();
+                            }, 200);
                         }
-                    } else {
-                        showMonth(currentMonthIndex);
                     }
                 });
+            }
+        }
+        
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: scale(0.95);
             }
         }
 
@@ -1152,6 +1170,8 @@
 
         function updatePercentages() {
             let mainValue = 0;
+            let rechargeValue = 0;
+            let transferValue = 0;
             
             // Get the current revenue value based on view
             if(currentIndex === 1 && monthSlides[currentMonthIndex]) {
@@ -1160,34 +1180,63 @@
                 if(monthRevenue) {
                     mainValue = parseFloat(monthRevenue.textContent.replace(/[^\d]/g, '')) || 0;
                 }
-            } else if(slides[currentIndex]) {
-                // Other views
-                const currentRevenue = slides[currentIndex].querySelector('.revenue-amount');
-                if(currentRevenue) {
-                    mainValue = parseFloat(currentRevenue.textContent.replace(/[^\d]/g, '')) || 0;
-                }
+                
+                // Définir les montants selon le mois
+                const monthData = {
+                    0: { recharge: 380, transfer: 36 },    // février
+                    1: { recharge: 5800, transfer: 1265 }, // mars
+                    2: { recharge: 950, transfer: 327 },   // avril
+                    3: { recharge: 950, transfer: 345 },   // mai (similaire à avril)
+                    4: { recharge: 2450, transfer: 1117 }, // juin
+                    5: { recharge: 3200, transfer: 1589 }, // juillet
+                    6: { recharge: 3350, transfer: 2106 }, // août (similaire à juillet)
+                    7: { recharge: 7021, transfer: 3340 }  // septembre
+                };
+                
+                const currentMonthData = monthData[currentMonthIndex] || { recharge: 1000, transfer: 500 };
+                rechargeValue = currentMonthData.recharge;
+                transferValue = currentMonthData.transfer;
+                
+            } else if(currentIndex === 0) {
+                // 1 semaine
+                rechargeValue = 1850;
+                transferValue = 740;
+                mainValue = parseFloat(slides[currentIndex].querySelector('.revenue-amount').textContent.replace(/[^\d]/g, '')) || 0;
+            } else if(currentIndex === 2) {
+                // 6 mois
+                rechargeValue = 42500;
+                transferValue = 19666;
+                mainValue = parseFloat(slides[currentIndex].querySelector('.revenue-amount').textContent.replace(/[^\d]/g, '')) || 0;
+            } else if(currentIndex === 3) {
+                // 1 an
+                rechargeValue = 85000;
+                transferValue = 39332;
+                mainValue = parseFloat(slides[currentIndex].querySelector('.revenue-amount').textContent.replace(/[^\d]/g, '')) || 0;
             }
             
             const rechargeAmount = document.getElementById('rechargeAmount');
             const transferAmount = document.getElementById('transferAmount');
+            const rechargePercentEl = document.getElementById('rechargePercent');
+            const transferPercentEl = document.getElementById('transferPercent');
             
-            if(rechargeAmount && transferAmount && mainValue > 0) {
-                const rechargeValue = parseFloat(rechargeAmount.textContent.replace(/[^\d]/g, '')) || 0;
-                const transferValue = parseFloat(transferAmount.textContent.replace(/[^\d]/g, '')) || 0;
+            if(rechargeAmount && transferAmount) {
+                // Formater et afficher les montants
+                rechargeAmount.textContent = '+' + rechargeValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' €';
+                transferAmount.textContent = '+' + transferValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' €';
                 
-                const rechargePercent = Math.round((rechargeValue / mainValue) * 100);
-                const transferPercent = Math.round((transferValue / mainValue) * 100);
-                
-                const rechargePercentEl = document.getElementById('rechargePercent');
-                const transferPercentEl = document.getElementById('transferPercent');
-                
-                if(rechargePercentEl) rechargePercentEl.textContent = rechargePercent + '%';
-                if(transferPercentEl) transferPercentEl.textContent = transferPercent + '%';
+                // Calculer et afficher les pourcentages
+                if(mainValue > 0) {
+                    const rechargePercent = Math.round((rechargeValue / mainValue) * 100);
+                    const transferPercent = Math.round((transferValue / mainValue) * 100);
+                    
+                    if(rechargePercentEl) rechargePercentEl.textContent = rechargePercent + '%';
+                    if(transferPercentEl) transferPercentEl.textContent = transferPercent + '%';
+                }
             }
         }
 
         // Format editable amounts
-        document.querySelectorAll('.revenue-amount, #rechargeAmount, #transferAmount, #mainBalance').forEach(element => {
+        document.querySelectorAll('.revenue-amount, #mainBalance').forEach(element => {
             element.addEventListener('focus', function() {
                 this.textContent = this.textContent.replace(/[^\d,\.]/g, '');
             });
@@ -1196,12 +1245,10 @@
                 const value = this.textContent.replace(/[^\d,\.]/g, '');
                 if (value) {
                     const formatted = formatNumber(value);
-                    const isCategory = (this.id === 'rechargeAmount' || this.id === 'transferAmount');
-                    this.textContent = (isCategory ? '+' : '') + formatted + ' €';
+                    this.textContent = formatted + ' €';
                     updatePercentages();
                 } else {
-                    const isCategory = (this.id === 'rechargeAmount' || this.id === 'transferAmount');
-                    this.textContent = (isCategory ? '+' : '') + '0 €';
+                    this.textContent = '0 €';
                 }
             });
             
