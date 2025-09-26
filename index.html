@@ -730,10 +730,40 @@
                             </div>
                         </div>
 
-                        <!-- Mois - Février à Septembre -->
+                        <!-- Mois - Novembre à Septembre -->
                         <div class="swiper-slide" data-period="month">
                             <div class="month-swiper-container">
                                 <div class="month-swiper-wrapper" id="monthSwiperWrapper">
+                                    <div class="month-slide" data-month="novembre">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 250deg, #7B61FF 250deg 310deg, #1C1C1C 310deg)"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">3 245 €</div>
+                                                <div class="period">novembre</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="month-slide" data-month="decembre">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 270deg, #7B61FF 270deg 330deg, #1C1C1C 330deg)"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">4 892 €</div>
+                                                <div class="period">décembre</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="month-slide" data-month="janvier">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 240deg, #7B61FF 240deg 300deg, #1C1C1C 300deg)"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">2 156 €</div>
+                                                <div class="period">janvier</div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="month-slide" data-month="fevrier">
                                         <div class="revenue-circle">
                                             <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 320deg, #1C1C1C 320deg)"></div>
@@ -919,7 +949,7 @@
         const timeButtons = document.querySelectorAll('.time-btn');
         
         // Month swiper variables
-        let currentMonthIndex = 7; // Start at September
+        let currentMonthIndex = 10; // Start at September (position 10 now with 3 new months)
         const monthSlides = document.querySelectorAll('.month-slide');
         
         let startX = 0;
@@ -983,14 +1013,17 @@
                 
                 // Définir les montants selon le mois
                 const monthData = {
-                    0: { recharge: 380, transfer: 36 },    // février
-                    1: { recharge: 5800, transfer: 1265 }, // mars
-                    2: { recharge: 950, transfer: 327 },   // avril
-                    3: { recharge: 950, transfer: 345 },   // mai (similaire à avril)
-                    4: { recharge: 2450, transfer: 1117 }, // juin
-                    5: { recharge: 3200, transfer: 1589 }, // juillet
-                    6: { recharge: 3350, transfer: 2106 }, // août (similaire à juillet)
-                    7: { recharge: 7021, transfer: 3340 }  // septembre
+                    0: { recharge: 2450, transfer: 795 },   // novembre
+                    1: { recharge: 3890, transfer: 1002 },  // décembre
+                    2: { recharge: 1850, transfer: 306 },   // janvier
+                    3: { recharge: 380, transfer: 36 },     // février
+                    4: { recharge: 5800, transfer: 1265 },  // mars
+                    5: { recharge: 950, transfer: 327 },    // avril
+                    6: { recharge: 950, transfer: 345 },    // mai (similaire à avril)
+                    7: { recharge: 2450, transfer: 1117 },  // juin
+                    8: { recharge: 3200, transfer: 1589 },  // juillet
+                    9: { recharge: 3350, transfer: 2106 },  // août (similaire à juillet)
+                    10: { recharge: 7021, transfer: 3340 }  // septembre
                 };
                 
                 const currentMonthData = monthData[currentMonthIndex] || { recharge: 1000, transfer: 500 };
@@ -1247,7 +1280,7 @@
             goToSlide(1);
         }
         if(monthSlides.length > 0) {
-            showMonth(7); // Start at September
+            showMonth(10); // Start at September (position 10)
         }
         updatePercentages();
     </script>
