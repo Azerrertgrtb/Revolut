@@ -919,7 +919,7 @@
         const timeButtons = document.querySelectorAll('.time-btn');
         
         // Month swiper variables
-        let currentMonthIndex = 0; // Start at February
+        let currentMonthIndex = 7; // Start at September
         const monthSlides = document.querySelectorAll('.month-slide');
         
         let startX = 0;
@@ -966,6 +966,73 @@
             }
             
             updatePercentages();
+        }
+
+        function updatePercentages() {
+            let mainValue = 0;
+            let rechargeValue = 0;
+            let transferValue = 0;
+            
+            // Get the current revenue value based on view
+            if(currentIndex === 1 && monthSlides[currentMonthIndex]) {
+                // Month view - get value from current month
+                const monthRevenue = monthSlides[currentMonthIndex].querySelector('.revenue-amount');
+                if(monthRevenue) {
+                    mainValue = parseFloat(monthRevenue.textContent.replace(/[^\d]/g, '')) || 0;
+                }
+                
+                // Définir les montants selon le mois
+                const monthData = {
+                    0: { recharge: 380, transfer: 36 },    // février
+                    1: { recharge: 5800, transfer: 1265 }, // mars
+                    2: { recharge: 950, transfer: 327 },   // avril
+                    3: { recharge: 950, transfer: 345 },   // mai (similaire à avril)
+                    4: { recharge: 2450, transfer: 1117 }, // juin
+                    5: { recharge: 3200, transfer: 1589 }, // juillet
+                    6: { recharge: 3350, transfer: 2106 }, // août (similaire à juillet)
+                    7: { recharge: 7021, transfer: 3340 }  // septembre
+                };
+                
+                const currentMonthData = monthData[currentMonthIndex] || { recharge: 1000, transfer: 500 };
+                rechargeValue = currentMonthData.recharge;
+                transferValue = currentMonthData.transfer;
+                
+            } else if(currentIndex === 0) {
+                // 1 semaine
+                rechargeValue = 1850;
+                transferValue = 740;
+                mainValue = parseFloat(slides[currentIndex].querySelector('.revenue-amount').textContent.replace(/[^\d]/g, '')) || 0;
+            } else if(currentIndex === 2) {
+                // 6 mois
+                rechargeValue = 42500;
+                transferValue = 19666;
+                mainValue = parseFloat(slides[currentIndex].querySelector('.revenue-amount').textContent.replace(/[^\d]/g, '')) || 0;
+            } else if(currentIndex === 3) {
+                // 1 an
+                rechargeValue = 85000;
+                transferValue = 39332;
+                mainValue = parseFloat(slides[currentIndex].querySelector('.revenue-amount').textContent.replace(/[^\d]/g, '')) || 0;
+            }
+            
+            const rechargeAmount = document.getElementById('rechargeAmount');
+            const transferAmount = document.getElementById('transferAmount');
+            const rechargePercentEl = document.getElementById('rechargePercent');
+            const transferPercentEl = document.getElementById('transferPercent');
+            
+            if(rechargeAmount && transferAmount) {
+                // Formater et afficher les montants
+                rechargeAmount.textContent = '+' + rechargeValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' €';
+                transferAmount.textContent = '+' + transferValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' €';
+                
+                // Calculer et afficher les pourcentages
+                if(mainValue > 0) {
+                    const rechargePercent = Math.round((rechargeValue / mainValue) * 100);
+                    const transferPercent = Math.round((transferValue / mainValue) * 100);
+                    
+                    if(rechargePercentEl) rechargePercentEl.textContent = rechargePercent + '%';
+                    if(transferPercentEl) transferPercentEl.textContent = transferPercent + '%';
+                }
+            }
         }
 
         // Month swiper touch events
@@ -1148,73 +1215,6 @@
                 return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ',' + parts[1].substring(0, 2);
             }
             return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-        }
-
-        function updatePercentages() {
-            let mainValue = 0;
-            let rechargeValue = 0;
-            let transferValue = 0;
-            
-            // Get the current revenue value based on view
-            if(currentIndex === 1 && monthSlides[currentMonthIndex]) {
-                // Month view - get value from current month
-                const monthRevenue = monthSlides[currentMonthIndex].querySelector('.revenue-amount');
-                if(monthRevenue) {
-                    mainValue = parseFloat(monthRevenue.textContent.replace(/[^\d]/g, '')) || 0;
-                }
-                
-                // Définir les montants selon le mois
-                const monthData = {
-                    0: { recharge: 380, transfer: 36 },    // février
-                    1: { recharge: 5800, transfer: 1265 }, // mars
-                    2: { recharge: 950, transfer: 327 },   // avril
-                    3: { recharge: 950, transfer: 345 },   // mai (similaire à avril)
-                    4: { recharge: 2450, transfer: 1117 }, // juin
-                    5: { recharge: 3200, transfer: 1589 }, // juillet
-                    6: { recharge: 3350, transfer: 2106 }, // août (similaire à juillet)
-                    7: { recharge: 7021, transfer: 3340 }  // septembre
-                };
-                
-                const currentMonthData = monthData[currentMonthIndex] || { recharge: 1000, transfer: 500 };
-                rechargeValue = currentMonthData.recharge;
-                transferValue = currentMonthData.transfer;
-                
-            } else if(currentIndex === 0) {
-                // 1 semaine
-                rechargeValue = 1850;
-                transferValue = 740;
-                mainValue = parseFloat(slides[currentIndex].querySelector('.revenue-amount').textContent.replace(/[^\d]/g, '')) || 0;
-            } else if(currentIndex === 2) {
-                // 6 mois
-                rechargeValue = 42500;
-                transferValue = 19666;
-                mainValue = parseFloat(slides[currentIndex].querySelector('.revenue-amount').textContent.replace(/[^\d]/g, '')) || 0;
-            } else if(currentIndex === 3) {
-                // 1 an
-                rechargeValue = 85000;
-                transferValue = 39332;
-                mainValue = parseFloat(slides[currentIndex].querySelector('.revenue-amount').textContent.replace(/[^\d]/g, '')) || 0;
-            }
-            
-            const rechargeAmount = document.getElementById('rechargeAmount');
-            const transferAmount = document.getElementById('transferAmount');
-            const rechargePercentEl = document.getElementById('rechargePercent');
-            const transferPercentEl = document.getElementById('transferPercent');
-            
-            if(rechargeAmount && transferAmount) {
-                // Formater et afficher les montants
-                rechargeAmount.textContent = '+' + rechargeValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' €';
-                transferAmount.textContent = '+' + transferValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' €';
-                
-                // Calculer et afficher les pourcentages
-                if(mainValue > 0) {
-                    const rechargePercent = Math.round((rechargeValue / mainValue) * 100);
-                    const transferPercent = Math.round((transferValue / mainValue) * 100);
-                    
-                    if(rechargePercentEl) rechargePercentEl.textContent = rechargePercent + '%';
-                    if(transferPercentEl) transferPercentEl.textContent = transferPercent + '%';
-                }
-            }
         }
 
         // Format editable amounts
