@@ -55,10 +55,193 @@
             display: flex;
         }
 
-        /* Page Accueil Styles */
-        .home-header {
+        /* Page Accueil - Nouveau design */
+        .home-header-top {
             padding: 50px 20px 20px;
             background: #000000;
+        }
+
+        .search-bar-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .at-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #FF8C00, #FFA500);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 20px;
+            color: white;
+        }
+
+        .search-bar {
+            flex: 1;
+            background: #1C1C1C;
+            border-radius: 25px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-icon {
+            width: 18px;
+            height: 18px;
+        }
+
+        .search-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: white;
+            font-size: 16px;
+        }
+
+        .search-input::placeholder {
+            color: #6B6B6B;
+        }
+
+        .header-right-icons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-circle {
+            width: 50px;
+            height: 50px;
+            background: #1C1C1C;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-circle svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .quick-actions-wrapper {
+            padding: 20px 0;
+        }
+
+        .dots-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+
+        .dots-indicator .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #3C3C3C;
+        }
+
+        .dots-indicator .dot.active {
+            background: white;
+            width: 20px;
+            border-radius: 3px;
+        }
+
+        .transactions-section {
+            padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .transaction-card {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #0A0A0A;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .transaction-card.upcoming {
+            background: #1C1C1C;
+        }
+
+        .transaction-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            background: #2C2C2C;
+        }
+
+        .transaction-icon.apple {
+            background: white;
+        }
+
+        .transaction-icon.wolt {
+            background: #00C2E7;
+        }
+
+        .transaction-details {
+            flex: 1;
+        }
+
+        .transaction-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .transaction-subtitle {
+            font-size: 14px;
+            color: #6B6B6B;
+        }
+
+        .transaction-amount {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .transaction-amount.failed {
+            text-decoration: line-through;
+            color: #6B6B6B;
+        }
+
+        .error-indicator {
+            position: absolute;
+            bottom: 10px;
+            right: 15px;
+            width: 20px;
+            height: 20px;
+            background: #FF3B30;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        .show-all-btn {
+            width: 100%;
+            padding: 15px;
+            background: transparent;
+            border: none;
+            color: #00C2E7;
+            font-size: 16px;
+            font-weight: 500;
+            margin-top: 20px;
         }
 
         .account-selector {
@@ -622,91 +805,129 @@
 </head>
 <body>
     <!-- Page Accueil -->
-    <div class="page" id="homePage">
+    <div class="page active" id="homePage">
+        <!-- Header avec recherche -->
+        <div class="home-header-top">
+            <div class="search-bar-container">
+                <div class="at-icon">AT</div>
+                <div class="search-bar">
+                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="#8B8B8B" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="M21 21l-4.35-4.35"></path>
+                    </svg>
+                    <input type="text" placeholder="Rechercher" class="search-input">
+                </div>
+                <div class="header-right-icons">
+                    <div class="icon-circle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
+                            <line x1="12" y1="20" x2="12" y2="10"></line>
+                            <line x1="18" y1="20" x2="18" y2="4"></line>
+                            <line x1="6" y1="20" x2="6" y2="14"></line>
+                        </svg>
+                    </div>
+                    <div class="icon-circle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Solde principal -->
         <div class="home-header">
             <div class="account-selector">
                 <div class="account-flag">EU</div>
                 <span class="account-label">Personnel · EUR</span>
             </div>
-            <div class="balance-display" contenteditable="true" id="mainBalance">101,97 €</div>
+            <div class="balance-display" contenteditable="true" id="mainBalance">5,13 €</div>
             <button class="accounts-button">Comptes et Portefeuilles</button>
         </div>
 
-        <div class="quick-actions">
-            <div class="action-button">
-                <div class="action-icon">
-                    <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                </div>
-                <span class="action-label">Ajouter de<br>l'argent</span>
+        <!-- Actions rapides avec 3 points indicateurs -->
+        <div class="quick-actions-wrapper">
+            <div class="dots-indicator">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
             </div>
-            <div class="action-button">
-                <div class="action-icon">
-                    <svg viewBox="0 0 24 24"><polyline points="7 10 2 15 7 20"></polyline><polyline points="17 4 22 9 17 14"></polyline><line x1="22" y1="9" x2="10" y2="9"></line><line x1="2" y1="15" x2="14" y2="15"></line></svg>
+            <div class="quick-actions">
+                <div class="action-button">
+                    <div class="action-icon">
+                        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    </div>
+                    <span class="action-label">Ajouter de<br>l'argent</span>
                 </div>
-                <span class="action-label">Transférer</span>
-            </div>
-            <div class="action-button" onclick="showPage('analyticsPage')">
-                <div class="action-icon">
-                    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                <div class="action-button">
+                    <div class="action-icon">
+                        <svg viewBox="0 0 24 24"><polyline points="7 10 2 15 7 20"></polyline><polyline points="17 4 22 9 17 14"></polyline><line x1="22" y1="9" x2="10" y2="9"></line><line x1="2" y1="15" x2="14" y2="15"></line></svg>
+                    </div>
+                    <span class="action-label">Transférer</span>
                 </div>
-                <span class="action-label">Informations</span>
-            </div>
-            <div class="action-button">
-                <div class="action-icon">
-                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+                <div class="action-button" onclick="showPage('analyticsPage')">
+                    <div class="action-icon">
+                        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                    </div>
+                    <span class="action-label">Informations</span>
                 </div>
-                <span class="action-label">Plus</span>
+                <div class="action-button">
+                    <div class="action-icon">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+                    </div>
+                    <span class="action-label">Plus</span>
+                </div>
             </div>
         </div>
 
-        <div class="promo-card">
-            <div class="promo-icon">
-                <svg viewBox="0 0 48 48" fill="none" stroke="#00D4FF" stroke-width="2">
-                    <rect x="8" y="16" width="32" height="24" rx="2"></rect>
-                    <path d="M12 8h24l-4 8H16z"></path>
-                    <circle cx="24" cy="28" r="4"></circle>
-                </svg>
+        <!-- Section Transactions -->
+        <div class="transactions-section">
+            <!-- Paiement à venir -->
+            <div class="transaction-card upcoming">
+                <div class="transaction-icon apple">
+                    <img src="" alt="Apple" style="width: 40px; height: 40px; border-radius: 50%;">
+                </div>
+                <div class="transaction-details">
+                    <div class="transaction-title">1 paiement à venir</div>
+                    <div class="transaction-subtitle">Échéance : 2 prochains jours</div>
+                </div>
+                <div class="transaction-amount">-22,99 €</div>
             </div>
-            <div class="promo-content">
-                <div class="promo-title">Ami invité = 80 € gagnés</div>
-                <div class="promo-desc">80 € par ami inscrit avant le 30 septembre. Voir CG.</div>
-            </div>
-        </div>
 
-        <div class="transactions-list">
-            <div class="transaction-item">
-                <div class="transaction-avatar">
-                    L
-                    <div class="transaction-arrow">
-                        <svg viewBox="0 0 12 12" fill="none"><path d="M2 6h8m0 0L7 3m3 3L7 9" /></svg>
-                    </div>
+            <!-- ManyChat -->
+            <div class="transaction-card">
+                <div class="transaction-icon manychat">
+                    <img src="" alt="ManyChat" style="width: 40px; height: 40px; border-radius: 50%;">
                 </div>
-                <div class="transaction-info">
-                    <div class="transaction-name">Love</div>
-                    <div class="transaction-time">Il y a quelques instants</div>
+                <div class="transaction-details">
+                    <div class="transaction-title">ManyChat</div>
+                    <div class="transaction-subtitle">Aujourd'hui, 01:32 · Solde insuffisant</div>
                 </div>
-                <div class="transaction-amount">-30 €</div>
+                <div class="transaction-amount failed">25,89 €</div>
+                <div class="error-indicator">✕</div>
             </div>
-            <div class="transaction-item">
-                <div class="transaction-avatar">
-                    L
-                    <div class="transaction-arrow">
-                        <svg viewBox="0 0 12 12" fill="none"><path d="M2 6h8m0 0L7 3m3 3L7 9" /></svg>
-                    </div>
+
+            <!-- Wolt -->
+            <div class="transaction-card">
+                <div class="transaction-icon wolt">
+                    <img src="" alt="Wolt" style="width: 40px; height: 40px; border-radius: 50%;">
                 </div>
-                <div class="transaction-info">
-                    <div class="transaction-name">Love</div>
-                    <div class="transaction-time">Hier, 19:16</div>
+                <div class="transaction-details">
+                    <div class="transaction-title">Wolt</div>
+                    <div class="transaction-subtitle">26 sept., 12:02</div>
                 </div>
-                <div class="transaction-amount">-20 €</div>
+                <div class="transaction-amount">-5,21 €</div>
             </div>
+
+            <button class="show-all-btn">Tout afficher</button>
         </div>
 
         <div class="bottom-nav"></div>
     </div>
 
     <!-- Page Analytics -->
-    <div class="page active" id="analyticsPage">
+    <div class="page" id="analyticsPage">
         <div class="app-container">
             <div class="app-header">
                 <div class="back-btn" onclick="showPage('homePage')">
@@ -1285,6 +1506,9 @@
             showMonth(10, true); // Start at September (position 10 now), instant load
         }
         updatePercentages();
+        
+        // Ensure we start on home page
+        showPage('homePage');
     </script>
 </body>
 </html>
