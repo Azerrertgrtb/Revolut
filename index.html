@@ -810,102 +810,12 @@
 </head>
 <body>
     <!-- Page Accueil -->
-    <div class="page active" id="homePage">
-        <!-- Barre supérieure avec l'image capture3.png -->
-        <div class="home-top-bar">
-            <div style="display: flex; justify-content: center; align-items: center; padding: 50px 20px 10px 20px; background: #000000;">
-                <img src="https://azerrertgrtb.github.io/Revolut/capture3.png" alt="Top Bar" style="height: 50px !important; width: auto !important; display: block;">
-            </div>
-        </div>
-
-        <!-- Solde principal -->
-        <div class="home-header">
-            <div class="account-selector">
-                <div class="account-flag">EU</div>
-                <span class="account-label">Personnel · EUR</span>
-            </div>
-            <div class="balance-display" contenteditable="true" id="mainBalance">5,13 €</div>
-            <button class="accounts-button">Comptes et Portefeuilles</button>
-        </div>
-
-        <!-- Actions rapides avec 3 points indicateurs -->
-        <div class="quick-actions-wrapper">
-            <div class="dots-indicator">
-                <span class="dot active"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
-            </div>
-            <div class="quick-actions">
-                <div class="action-button">
-                    <div class="action-icon">
-                        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                    </div>
-                    <span class="action-label">Ajouter de<br>l'argent</span>
-                </div>
-                <div class="action-button">
-                    <div class="action-icon">
-                        <svg viewBox="0 0 24 24"><polyline points="7 10 2 15 7 20"></polyline><polyline points="17 4 22 9 17 14"></polyline><line x1="22" y1="9" x2="10" y2="9"></line><line x1="2" y1="15" x2="14" y2="15"></line></svg>
-                    </div>
-                    <span class="action-label">Transférer</span>
-                </div>
-                <div class="action-button" onclick="showPage('analyticsPage')">
-                    <div class="action-icon">
-                        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                    </div>
-                    <span class="action-label">Informations</span>
-                </div>
-                <div class="action-button">
-                    <div class="action-icon">
-                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
-                    </div>
-                    <span class="action-label">Plus</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Section Transactions -->
-        <div class="transactions-section">
-            <!-- Paiement à venir -->
-            <div class="transaction-card upcoming">
-                <div class="transaction-icon apple">
-                    <img src="" alt="Apple" style="width: 40px; height: 40px; border-radius: 50%;">
-                </div>
-                <div class="transaction-details">
-                    <div class="transaction-title">1 paiement à venir</div>
-                    <div class="transaction-subtitle">Échéance : 2 prochains jours</div>
-                </div>
-                <div class="transaction-amount">-22,99 €</div>
-            </div>
-
-            <!-- ManyChat -->
-            <div class="transaction-card">
-                <div class="transaction-icon manychat">
-                    <img src="" alt="ManyChat" style="width: 40px; height: 40px; border-radius: 50%;">
-                </div>
-                <div class="transaction-details">
-                    <div class="transaction-title">ManyChat</div>
-                    <div class="transaction-subtitle">Aujourd'hui, 01:32 · Solde insuffisant</div>
-                </div>
-                <div class="transaction-amount failed">25,89 €</div>
-                <div class="error-indicator">✕</div>
-            </div>
-
-            <!-- Wolt -->
-            <div class="transaction-card">
-                <div class="transaction-icon wolt">
-                    <img src="" alt="Wolt" style="width: 40px; height: 40px; border-radius: 50%;">
-                </div>
-                <div class="transaction-details">
-                    <div class="transaction-title">Wolt</div>
-                    <div class="transaction-subtitle">26 sept., 12:02</div>
-                </div>
-                <div class="transaction-amount">-5,21 €</div>
-            </div>
-
-            <button class="show-all-btn">Tout afficher</button>
-        </div>
-
-        <div class="bottom-nav"></div>
+    <div class="page active" id="homePage" style="position: relative; height: 100vh; width: 100vw; overflow: hidden; background: #000;">
+        <!-- Image de fond qui remplit tout l'écran mobile -->
+        <img src="https://azerrertgrtb.github.io/Revolut/capture4.jpg" alt="Accueil" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; object-position: center;">
+        
+        <!-- Zone cliquable invisible sur le bouton Informations (ajusté pour mobile) -->
+        <div style="position: absolute; top: 55%; left: 37%; width: 80px; height: 80px; cursor: pointer;" onclick="showPage('analyticsPage')"></div>
     </div>
 
     <!-- Page Analytics -->
