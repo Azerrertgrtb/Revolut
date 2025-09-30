@@ -1,609 +1,1443 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="theme-color" content="#000000" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <title>Revolut</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#000000">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Revolut</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-  <style>
-    /* ====== Root + Resets ====== */
-    :root {
-      /* Décalage vertical demandé : remonter de 1 cm (10mm) */
-      --home-shift-y: -10mm;
-    }
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: fixed;
+            background: #000000;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            background: #000000;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        
+        [contenteditable="true"] {
+            -webkit-user-select: text !important;
+            user-select: text !important;
+            -webkit-touch-callout: initial !important;
+        }
 
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      position: fixed;
-      background: #000000;
-      margin: 0 !important;
-      padding: 0 !important;
-      -webkit-touch-callout: none;
-      -webkit-user-select: none;
-      user-select: none;
-    }
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: none;
+            flex-direction: column;
+        }
 
-    [contenteditable="true"] {
-      -webkit-user-select: text !important;
-      user-select: text !important;
-      -webkit-touch-callout: initial !important;
-    }
+        .page.active {
+            display: flex;
+        }
 
-    .page {
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      display: none;
-      flex-direction: column;
-    }
+        /* Page Accueil - Nouveau design */
+        .home-top-bar {
+            padding: 45px 15px 15px;
+            background: #000000;
+        }
 
-    .page.active { display: flex; }
+        .home-header {
+            padding: 20px 20px 20px;
+            background: #000000;
+        }
 
-    /* ====== HOME PAGE: plein écran, image en fond, ancrée en bas ====== */
-    #homePage {
-      position: fixed; /* plein écran, indépendant du flux */
-      inset: 0;
-      width: 100%;
-      height: 100dvh;           /* évite le "black bar" iOS/Android */
-      min-height: 100svh;       /* fallback visuel sûr */
-      background: #000 url('https://azerrertgrtb.github.io/Revolut/capture4.jpg') center bottom / cover no-repeat;
-      /* Ancrage en bas + décalage de 1 cm vers le haut */
-      background-position: center calc(100% + var(--home-shift-y));
-      overflow: hidden;
-    }
+        .search-bar-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-    /* Fallback si 100dvh non supporté */
-    @supports not (height: 100dvh) {
-      #homePage { height: 100vh; }
-    }
+        .at-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #FF8C00, #FFA500);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 20px;
+            color: white;
+        }
 
-    /* ====== (Reste de ton CSS inchangé) ====== */
-    .home-top-bar { padding: 45px 15px 15px; background: #000000; }
-    .home-header { padding: 20px 20px 20px; background: #000000; }
-    .search-bar-container { display: flex; align-items: center; gap: 10px; }
-    .at-icon { width: 50px; height: 50px; background: linear-gradient(135deg, #FF8C00, #FFA500); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 20px; color: white; }
-    .search-bar { flex: 1; background: #1C1C1C; border-radius: 25px; padding: 12px 20px; display: flex; align-items: center; gap: 10px; }
-    .search-icon { width: 18px; height: 18px; }
-    .search-input { flex: 1; background: transparent; border: none; outline: none; color: white; font-size: 16px; }
-    .search-input::placeholder { color: #6B6B6B; }
-    .header-right-icons { display: flex; gap: 10px; }
-    .icon-circle { width: 50px; height: 50px; background: #1C1C1C; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-    .icon-circle svg { width: 24px; height: 24px; }
-    .quick-actions-wrapper { padding: 20px 0; }
-    .dots-indicator { display: flex; justify-content: center; gap: 6px; margin-bottom: 20px; }
-    .dots-indicator .dot { width: 6px; height: 6px; border-radius: 50%; background: #3C3C3C; }
-    .dots-indicator .dot.active { background: white; width: 20px; border-radius: 3px; }
-    .transactions-section { padding: 20px; flex: 1; overflow-y: auto; }
-    .transaction-card { display: flex; align-items: center; padding: 15px; background: #0A0A0A; border-radius: 16px; margin-bottom: 12px; position: relative; }
-    .transaction-card.upcoming { background: #1C1C1C; }
-    .transaction-icon { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px; background: #2C2C2C; }
-    .transaction-icon.apple { background: white; }
-    .transaction-icon.wolt { background: #00C2E7; }
-    .transaction-details { flex: 1; }
-    .transaction-title { font-size: 16px; font-weight: 500; color: white; margin-bottom: 4px; }
-    .transaction-subtitle { font-size: 14px; color: #6B6B6B; }
-    .transaction-amount { font-size: 18px; font-weight: 600; color: white; }
-    .transaction-amount.failed { text-decoration: line-through; color: #6B6B6B; }
-    .error-indicator { position: absolute; bottom: 10px; right: 15px; width: 20px; height: 20px; background: #FF3B30; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; }
-    .show-all-btn { width: 100%; padding: 15px; background: transparent; border: none; color: #00C2E7; font-size: 16px; font-weight: 500; margin-top: 20px; }
-    .account-selector { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
-    .account-flag { width: 24px; height: 24px; background: linear-gradient(135deg, #003DA5, #0055FF); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: white; }
-    .account-label { color: #8B8B8B; font-size: 14px; }
-    .balance-display { font-size: 48px; font-weight: 700; color: white; margin-bottom: 20px; letter-spacing: -1px; }
-    .balance-display[contenteditable]:focus { outline: none; background: rgba(255,255,255,0.05); border-radius: 8px; padding: 0 10px; }
-    .accounts-button { background: #1C1C1C; border: none; border-radius: 24px; padding: 12px 24px; color: white; font-size: 16px; display: inline-block; }
-    .quick-actions { display: flex; gap: 15px; padding: 20px; justify-content: space-around; }
-    .action-button { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
-    .action-icon { width: 56px; height: 56px; background: #1C1C1C; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-    .action-icon svg { width: 28px; height: 28px; stroke: white; stroke-width: 2; fill: none; }
-    .action-label { font-size: 11px; color: #8B8B8B; text-align: center; line-height: 1.3; }
-    .promo-card { margin: 20px; padding: 20px; background: linear-gradient(135deg, #1C1C1C, #2C2C2C); border-radius: 16px; display: flex; align-items: center; gap: 15px; }
-    .promo-icon { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; }
-    .promo-content { flex: 1; }
-    .promo-title { font-size: 18px; font-weight: 600; margin-bottom: 5px; }
-    .promo-desc { font-size: 14px; color: #8B8B8B; }
-    .transactions-list { padding: 0 20px; flex: 1; overflow-y: auto; }
-    .transaction-item { display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid #1C1C1C; }
-    .transaction-avatar { width: 40px; height: 40px; background: #5B41DF; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px; color: white; font-weight: 600; position: relative; }
-    .transaction-arrow { position: absolute; bottom: -2px; right: -2px; width: 16px; height: 16px; background: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-    .transaction-arrow svg { width: 10px; height: 10px; stroke: white; stroke-width: 2; }
-    .transaction-info { flex: 1; }
-    .transaction-name { font-size: 16px; margin-bottom: 2px; }
-    .transaction-time { font-size: 13px; color: #6B6B6B; }
-    .transaction-amount { font-size: 18px; font-weight: 600; }
+        .search-bar {
+            flex: 1;
+            background: #1C1C1C;
+            border-radius: 25px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-    /* Analytics Page Styles */
-    .app-container { flex: 1; display: flex; flex-direction: column; width: 100%; background: #000000; overflow: hidden; }
-    .app-header { display: flex; justify-content: space-between; align-items: center; padding: 50px 20px 15px; background: #000000; }
-    .back-btn { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-    .back-btn svg { width: 20px; height: 20px; stroke: white; stroke-width: 2; }
-    .header-actions-pill { display: flex; align-items: center; justify-content: center; gap: 0; background: transparent; padding: 0; border-radius: 0; height: auto; border: none; box-shadow: none; }
-    .header-action-icon { width: 20px; height: 20px; opacity: 0.9; }
-    .header-action-divider { width: 1px; height: 20px; background: rgba(255,255,255,0.1); }
-    .header-title { font-size: 18px; font-weight: 600; color: white; position: absolute; left: 50%; transform: translateX(-50%); }
-    .header-actions { display: flex; gap: 15px; align-items: center; }
-    .header-icon { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; opacity: 0.8; cursor: pointer; }
-    .header-icon svg { width: 20px; height: 20px; stroke: white; stroke-width: 1.5; fill: none; }
-    .content-area { flex: 1; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; padding: 0 20px 30px; }
-    .revenue-circle { position: relative; width: 260px; height: 260px; margin: 20px auto 30px; display: flex; align-items: center; justify-content: center; }
-    .circle-bg { position: absolute; width: 100%; height: 100%; border-radius: 50%; background: conic-gradient(from -90deg, #00D4FF 0deg 216deg, #7B61FF 216deg 288deg, #1C1C1C 288deg); }
-    .circle-inner { position: absolute; width: calc(100% - 25px); height: calc(100% - 25px); background: #000000; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-    .revenue-label { font-size: 16px; color: #8B8B8B; margin-bottom: 8px; font-weight: 400; }
-    .revenue-amount { font-size: 42px; font-weight: 700; color: white; letter-spacing: -1px; cursor: text; }
-    .revenue-amount[contenteditable="true"] { cursor: text; user-select: text; -webkit-user-select: text; }
-    .revenue-amount[contenteditable="true"]:hover { background: rgba(255,255,255,0.05); border-radius: 8px; padding: 0 10px; }
-    .revenue-amount[contenteditable="true"]:focus { outline: none; background: rgba(255,255,255,0.1); border-radius: 8px; padding: 0 10px; }
-    .period { font-size: 15px; color: #8B8B8B; margin-top: 8px; }
-    .swipe-indicator { display: flex; justify-content: center; gap: 6px; margin: 20px 0; }
-    .dot { width: 6px; height: 6px; border-radius: 50%; background: #3C3C3C; transition: all 0.3s ease; }
-    .dot.active { background: white; width: 20px; border-radius: 3px; }
-    .time-selector { display: flex; gap: 8px; justify-content: center; margin: 20px 0 30px; padding: 0 10px; }
-    .time-btn { flex: 1; padding: 10px 0; background: #1C1C1C; border: none; border-radius: 20px; color: #6B6B6B; font-size: 15px; font-weight: 500; transition: all 0.3s ease; cursor: pointer; }
-    .time-btn.active { background: #2C2C2C; color: white; }
-    .category-section { margin-top: 20px; }
-    .category-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .category-title { font-size: 18px; font-weight: 600; color: white; }
-    .manage-btn { color: #00D4FF; background: none; border: none; font-size: 15px; font-weight: 500; cursor: pointer; }
-    .category-item { display: flex; align-items: center; padding: 16px; background: #0A0A0A; border-radius: 12px; margin-bottom: 12px; }
-    .category-icon { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px; color: white; }
-    .category-icon svg { width: 22px; height: 22px; fill: white; }
-    .icon-recharge { background: #00D4FF; }
-    .icon-transfer { background: #7B61FF; }
-    .icon-general { background: #4CAF50; }
-    .category-info { flex: 1; }
-    .category-name { font-size: 16px; margin-bottom: 4px; color: white; font-weight: 500; }
-    .transaction-count { font-size: 13px; color: #6B6B6B; }
-    .category-amount { text-align: right; }
-    .amount-value { font-size: 18px; font-weight: 600; color: white; }
-    .amount-value[contenteditable]:focus { outline: none; background: rgba(255,255,255,0.05); border-radius: 4px; padding: 2px 6px; }
-    .percentage { font-size: 13px; color: #6B6B6B; margin-top: 4px; }
-    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 20px; background: #000000; z-index: 1000; }
-    .month-swiper-container { width: 100%; overflow: hidden; position: relative; }
-    .month-swiper-wrapper { display: flex; transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); will-change: transform; }
-    .month-slide { width: 100%; flex-shrink: 0; }
-    .swiper-container { width: 100%; overflow: hidden; touch-action: pan-y; margin-top: 20px; }
-    .swiper-wrapper { display: flex; transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
-    .swiper-slide { width: 100%; flex-shrink: 0; }
-  </style>
+        .search-icon {
+            width: 18px;
+            height: 18px;
+        }
+
+        .search-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: white;
+            font-size: 16px;
+        }
+
+        .search-input::placeholder {
+            color: #6B6B6B;
+        }
+
+        .header-right-icons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-circle {
+            width: 50px;
+            height: 50px;
+            background: #1C1C1C;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-circle svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .quick-actions-wrapper {
+            padding: 20px 0;
+        }
+
+        .dots-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+
+        .dots-indicator .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #3C3C3C;
+        }
+
+        .dots-indicator .dot.active {
+            background: white;
+            width: 20px;
+            border-radius: 3px;
+        }
+
+        .transactions-section {
+            padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .transaction-card {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #0A0A0A;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .transaction-card.upcoming {
+            background: #1C1C1C;
+        }
+
+        .transaction-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            background: #2C2C2C;
+        }
+
+        .transaction-icon.apple {
+            background: white;
+        }
+
+        .transaction-icon.wolt {
+            background: #00C2E7;
+        }
+
+        .transaction-details {
+            flex: 1;
+        }
+
+        .transaction-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .transaction-subtitle {
+            font-size: 14px;
+            color: #6B6B6B;
+        }
+
+        .transaction-amount {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .transaction-amount.failed {
+            text-decoration: line-through;
+            color: #6B6B6B;
+        }
+
+        .error-indicator {
+            position: absolute;
+            bottom: 10px;
+            right: 15px;
+            width: 20px;
+            height: 20px;
+            background: #FF3B30;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        .show-all-btn {
+            width: 100%;
+            padding: 15px;
+            background: transparent;
+            border: none;
+            color: #00C2E7;
+            font-size: 16px;
+            font-weight: 500;
+            margin-top: 20px;
+        }
+
+        .account-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .account-flag {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #003DA5, #0055FF);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .account-label {
+            color: #8B8B8B;
+            font-size: 14px;
+        }
+
+        .balance-display {
+            font-size: 48px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+
+        .balance-display[contenteditable]:focus {
+            outline: none;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 0 10px;
+        }
+
+        .accounts-button {
+            background: #1C1C1C;
+            border: none;
+            border-radius: 24px;
+            padding: 12px 24px;
+            color: white;
+            font-size: 16px;
+            display: inline-block;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 15px;
+            padding: 20px;
+            justify-content: space-around;
+        }
+
+        .action-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .action-icon {
+            width: 56px;
+            height: 56px;
+            background: #1C1C1C;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-icon svg {
+            width: 28px;
+            height: 28px;
+            stroke: white;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .action-label {
+            font-size: 11px;
+            color: #8B8B8B;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .promo-card {
+            margin: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, #1C1C1C, #2C2C2C);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .promo-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .promo-content {
+            flex: 1;
+        }
+
+        .promo-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .promo-desc {
+            font-size: 14px;
+            color: #8B8B8B;
+        }
+
+        .transactions-list {
+            padding: 0 20px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .transaction-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #1C1C1C;
+        }
+
+        .transaction-avatar {
+            width: 40px;
+            height: 40px;
+            background: #5B41DF;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: white;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .transaction-arrow {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 16px;
+            height: 16px;
+            background: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .transaction-arrow svg {
+            width: 10px;
+            height: 10px;
+            stroke: white;
+            stroke-width: 2;
+        }
+
+        .transaction-info {
+            flex: 1;
+        }
+
+        .transaction-name {
+            font-size: 16px;
+            margin-bottom: 2px;
+        }
+
+        .transaction-time {
+            font-size: 13px;
+            color: #6B6B6B;
+        }
+
+        .transaction-amount {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* Analytics Page Styles */
+        .app-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            background: #000000;
+            overflow: hidden;
+        }
+
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 50px 20px 15px;
+            background: #000000;
+        }
+
+        .back-btn {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .back-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: white;
+            stroke-width: 2;
+        }
+
+        .header-actions-pill {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+            height: auto;
+            border: none;
+            box-shadow: none;
+        }
+
+        .header-action-icon {
+            width: 20px;
+            height: 20px;
+            opacity: 0.9;
+        }
+
+        .header-action-divider {
+            width: 1px;
+            height: 20px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .header-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.8;
+            cursor: pointer;
+        }
+
+        .header-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: white;
+            stroke-width: 1.5;
+            fill: none;
+        }
+
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            padding: 0 20px 30px;
+        }
+
+        .revenue-circle {
+            position: relative;
+            width: 260px;
+            height: 260px;
+            margin: 20px auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .circle-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(
+                from -90deg,
+                #00D4FF 0deg 216deg,
+                #7B61FF 216deg 288deg,
+                #1C1C1C 288deg
+            );
+        }
+
+        .circle-inner {
+            position: absolute;
+            width: calc(100% - 25px);
+            height: calc(100% - 25px);
+            background: #000000;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .revenue-label {
+            font-size: 16px;
+            color: #8B8B8B;
+            margin-bottom: 8px;
+            font-weight: 400;
+        }
+
+        .revenue-amount {
+            font-size: 42px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: -1px;
+            cursor: text;
+        }
+
+        .revenue-amount[contenteditable="true"] {
+            cursor: text;
+            user-select: text;
+            -webkit-user-select: text;
+        }
+
+        .revenue-amount[contenteditable="true"]:hover {
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 0 10px;
+        }
+
+        .revenue-amount[contenteditable="true"]:focus {
+            outline: none;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 0 10px;
+        }
+
+        .period {
+            font-size: 15px;
+            color: #8B8B8B;
+            margin-top: 8px;
+        }
+
+        .swipe-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin: 20px 0;
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #3C3C3C;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: white;
+            width: 20px;
+            border-radius: 3px;
+        }
+
+        .time-selector {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin: 20px 0 30px;
+            padding: 0 10px;
+        }
+
+        .time-btn {
+            flex: 1;
+            padding: 10px 0;
+            background: #1C1C1C;
+            border: none;
+            border-radius: 20px;
+            color: #6B6B6B;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .time-btn.active {
+            background: #2C2C2C;
+            color: white;
+        }
+
+        .category-section {
+            margin-top: 20px;
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .category-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .manage-btn {
+            color: #00D4FF;
+            background: none;
+            border: none;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .category-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            background: #0A0A0A;
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+
+        .category-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: white;
+        }
+
+        .category-icon svg {
+            width: 22px;
+            height: 22px;
+            fill: white;
+        }
+
+        .icon-recharge {
+            background: #00D4FF;
+        }
+
+        .icon-transfer {
+            background: #7B61FF;
+        }
+
+        .icon-general {
+            background: #4CAF50;
+        }
+
+        .category-info {
+            flex: 1;
+        }
+
+        .category-name {
+            font-size: 16px;
+            margin-bottom: 4px;
+            color: white;
+            font-weight: 500;
+        }
+
+        .transaction-count {
+            font-size: 13px;
+            color: #6B6B6B;
+        }
+
+        .category-amount {
+            text-align: right;
+        }
+
+        .amount-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .amount-value[contenteditable]:focus {
+            outline: none;
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
+            padding: 2px 6px;
+        }
+
+        .percentage {
+            font-size: 13px;
+            color: #6B6B6B;
+            margin-top: 4px;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: #000000;
+            z-index: 1000;
+        }
+
+        .month-swiper-container {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .month-swiper-wrapper {
+            display: flex;
+            transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            will-change: transform;
+        }
+
+        .month-slide {
+            width: 100%;
+            flex-shrink: 0;
+        }
+
+        .swiper-container {
+            width: 100%;
+            overflow: hidden;
+            touch-action: pan-y;
+            margin-top: 20px;
+        }
+
+        .swiper-wrapper {
+            display: flex;
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .swiper-slide {
+            width: 100%;
+            flex-shrink: 0;
+        }/* === FIX HOME IMAGE: plein écran + remonter de 1 cm + pas de bande noire === */
+:root { 
+  /* Ajuste ici la remontée : -10mm = 1 cm vers le haut */
+  --home-shift-y: -10mm;
+}
+
+#homePage{
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100dvh !important;   /* plein écran réel mobile */
+  min-height: 100svh;          /* fallback sûr */
+  overflow: hidden !important;
+  background: #000 !important;
+}
+
+/* Cible UNIQUEMENT l'image d'accueil existante, sans toucher le reste */
+#homePage > img[alt="Accueil"]{
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;        /* colle l'image en bas */
+  top: auto !important;         /* annule le top:0 inline */
+  width: 100vw !important;
+  height: 100dvh !important;    /* remplit 100% de la hauteur visible */
+  object-fit: cover !important;
+  object-position: center bottom !important; /* on garde le bas réel de l'image */
+  transform: translateY(var(--home-shift-y)) !important; /* remonte l'image */
+}
+
+/* Fallback anciens navigateurs sans 100dvh */
+@supports not (height: 100dvh){
+  #homePage{ height: 100vh !important; }
+  #homePage > img[alt="Accueil"]{ height: 100vh !important; }
+}
+
+    </style>
 </head>
-
 <body>
-  <!-- Page Accueil (corrigée) -->
-  <div class="page active" id="homePage">
-    <!-- Zone cliquable invisible sur le bouton Informations (inchangé) -->
-    <div style="position: absolute; top: 56%; left: 37%; width: 80px; height: 80px; cursor: pointer; z-index: 10;" onclick="showPage('analyticsPage')"></div>
-  </div>
-
-  <!-- Page Analytics (inchangée fonctionnellement) -->
-  <div class="page" id="analyticsPage">
-    <div class="app-container">
-      <div class="app-header">
-        <div class="back-btn" onclick="showPage('homePage')">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M19 12H5M5 12l7 7m-7-7l7-7" stroke="white" stroke-width="2" />
-          </svg>
-        </div>
-        <div style="flex: 1;"></div>
-        <div style="display: inline-block; background: #000000; padding: 8px 16px; border-radius: 22px; margin-right: -5px;">
-          <img src="https://azerrertgrtb.github.io/Revolut/capture3.png" alt="Actions" style="height: 58px !important; width: auto !important; display: block; max-width: none !important; min-height: 58px !important;" />
-        </div>
-      </div>
-
-      <div class="content-area">
-        <div class="swiper-container">
-          <div class="swiper-wrapper" id="swiperWrapper">
-            <!-- 1 semaine -->
-            <div class="swiper-slide" data-period="week">
-              <div class="revenue-circle">
-                <div class="circle-bg"></div>
-                <div class="circle-inner">
-                  <div class="revenue-label">Revenus</div>
-                  <div class="revenue-amount" contenteditable="true" data-period="1s">2 590 €</div>
-                  <div class="period">Cette semaine</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Mois - Novembre à Septembre -->
-            <div class="swiper-slide" data-period="month">
-              <div class="month-swiper-container">
-                <div class="month-swiper-wrapper" id="monthSwiperWrapper">
-                  <div class="month-slide" data-month="novembre">
-                    <div class="revenue-circle">
-                      <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 250deg, #7B61FF 250deg 310deg, #1C1C1C 310deg)"></div>
-                      <div class="circle-inner">
-                        <div class="revenue-label">Revenus</div>
-                        <div class="revenue-amount" contenteditable="true">3 245 €</div>
-                        <div class="period">novembre</div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="month-slide" data-month="decembre">
-                    <div class="revenue-circle">
-                      <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 270deg, #7B61FF 270deg 330deg, #1C1C1C 330deg)"></div>
-                      <div class="circle-inner">
-                        <div class="revenue-label">Revenus</div>
-                        <div class="revenue-amount" contenteditable="true">4 892 €</div>
-                        <div class="period">décembre</div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="month-slide" data-month="janvier">
-                    <div class="revenue-circle">
-                      <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 240deg, #7B61FF 240deg 300deg, #1C1C1C 300deg)"></div>
-                      <div class="circle-inner">
-                        <div class="revenue-label">Revenus</div>
-                        <div class="revenue-amount" contenteditable="true">2 156 €</div>
-                        <div class="period">janvier</div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="month-slide" data-month="fevrier">
-                    <div class="revenue-circle">
-                      <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 320deg, #1C1C1C 320deg)"></div>
-                      <div class="circle-inner">
-                        <div class="revenue-label">Revenus</div>
-                        <div class="revenue-amount" contenteditable="true">416 €</div>
-                        <div class="period">février</div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="month-slide" data-month="mars">
-                    <div class="revenue-circle">
-                      <div class="circle-bg" style="background: conic-gradient(from -90deg, #7B61FF 0deg 280deg, #00D4FF 280deg 340deg, #1C1C1C 340deg)"></div>
-                      <div class="circle-inner">
-                        <div class="revenue-label">Revenus</div>
-                        <div class="revenue-amount" contenteditable="true">7 065 €</div>
-                        <div class="period">mars</div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="month-slide" data-month="avril">
-                    <div class="revenue-circle">
-                      <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 260deg, #7B61FF 260deg 320deg, #1C1C1C 320deg)"></div>
-                      <div class="circle-inner">
-                        <div class="revenue-label">Revenus</div>
-                        <div class="revenue-amount" contenteditable="true">1 277 €</div>
-                        <div class="period">avril</div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="month-slide" data-month="mai">
-                    <div class="revenue-circle">
-                      <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 200deg, #7B61FF 200deg 280deg, #4CAF50 280deg 300deg, #1C1C1C 300deg)"></div>
-                      <div class="circle-inner">
-                        <div class="revenue-label">Revenus</div>
-                        <div class="revenue-amount" contenteditable="true">2 865 €</div>
-                        <div class="period">mai</div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="month-slide" data-month="juin">
-                    <div class="revenue-circle">
-                      <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 216deg, #7B61FF 216deg 288deg, #1C1C1C 288deg)"></div>
-                      <div class="circle-inner">
-                        <div class="revenue-label">Revenus</div>
-                        <div class="revenue-amount" contenteditable="true">3 567 €</div>
-                        <div class="period">juin</div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="month-slide" data-month="juillet">
-                    <div class="revenue-circle">
-                      <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 230deg, #7B61FF 230deg 290deg, #1C1C1C 290deg)"></div>
-                      <div class="circle-inner">
-                        <div class="revenue-label">Revenus</div>
-                        <div class="revenue-amount" contenteditable="true">4 789 €</div>
-                        <div class="period">juillet</div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="month-slide" data-month="aout">
-                    <div class="revenue-circle">
-                      <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 210deg, #7B61FF 210deg 285deg, #1C1C1C 285deg)"></div>
-                      <div class="circle-inner">
-                        <div class="revenue-label">Revenus</div>
-                        <div class="revenue-amount" contenteditable="true">5 456 €</div>
-                        <div class="period">août</div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="month-slide active" data-month="septembre">
-                    <div class="revenue-circle">
-                      <div class="circle-bg"></div>
-                      <div class="circle-inner">
-                        <div class="revenue-label">Revenus</div>
-                        <div class="revenue-amount" contenteditable="true">10 361 €</div>
-                        <div class="period" style="color: #8B8B8B;">Ce mois-ci</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- 6 mois -->
-            <div class="swiper-slide" data-period="sixmonths">
-              <div class="revenue-circle">
-                <div class="circle-bg"></div>
-                <div class="circle-inner">
-                  <div class="revenue-label">Revenus</div>
-                  <div class="revenue-amount" contenteditable="true" data-period="6m">62 166 €</div>
-                  <div class="period">Ces 6 derniers mois</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- 1 an -->
-            <div class="swiper-slide" data-period="year">
-              <div class="revenue-circle">
-                <div class="circle-bg"></div>
-                <div class="circle-inner">
-                  <div class="revenue-label">Revenus</div>
-                  <div class="revenue-amount" contenteditable="true" data-period="1a">124 332 €</div>
-                  <div class="period">Cette année</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="swipe-indicator">
-          <div class="dot"></div>
-          <div class="dot active"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-        </div>
-
-        <div class="time-selector">
-          <button class="time-btn" data-index="0">1 s</button>
-          <button class="time-btn active" data-index="1">1 m</button>
-          <button class="time-btn" data-index="2">6 m</button>
-          <button class="time-btn" data-index="3">1 a</button>
-        </div>
-
-        <div class="category-section">
-          <div class="category-header">
-            <div class="category-title">Par catégorie</div>
-            <button class="manage-btn">Gérer</button>
-          </div>
-
-          <div class="category-item">
-            <div class="category-icon icon-recharge">
-              <img src="https://azerrertgrtb.github.io/Revolut/logo1.png" alt="Recharges" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover;" />
-            </div>
-            <div class="category-info">
-              <div class="category-name">Recharges</div>
-              <div class="transaction-count"><span id="rechargeCount">17</span> transactions</div>
-            </div>
-            <div class="category-amount">
-              <div class="amount-value" contenteditable="true" id="rechargeAmount">+7 021 €</div>
-              <div class="percentage" id="rechargePercent">68%</div>
-            </div>
-          </div>
-
-          <div class="category-item">
-            <div class="category-icon icon-transfer">
-              <img src="https://azerrertgrtb.github.io/Revolut/logo2.png" alt="Virements" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover;" />
-            </div>
-            <div class="category-info">
-              <div class="category-name">Virements</div>
-              <div class="transaction-count"><span id="transferCount">24</span> transactions</div>
-            </div>
-            <div class="category-amount">
-              <div class="amount-value" contenteditable="true" id="transferAmount">+2 485 €</div>
-              <div class="percentage" id="transferPercent">24%</div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <!-- Page Accueil -->
+    <div class="page active" id="homePage" style="position: fixed; top: 0; left: 0; height: 100%; width: 100%; overflow: hidden; background: #000;">
+        <!-- Image descendue de 0.3cm supplémentaire et étirée pour éliminer le noir -->
+        <img src="https://azerrertgrtb.github.io/Revolut/capture4.jpg" alt="Accueil" style="position: absolute; top: 0; left: 0; width: 100%; height: 105%; object-fit: cover; object-position: center top; transform: translateY(32px);">
+        
+        <!-- Zone cliquable invisible sur le bouton Informations -->
+        <div style="position: absolute; top: 56%; left: 37%; width: 80px; height: 80px; cursor: pointer; z-index: 10;" onclick="showPage('analyticsPage')"></div>
     </div>
 
-    <div class="bottom-nav"></div>
-  </div>
+    <!-- Page Analytics -->
+    <div class="page" id="analyticsPage">
+        <div class="app-container">
+            <div class="app-header">
+                <div class="back-btn" onclick="showPage('homePage')">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M19 12H5M5 12l7 7m-7-7l7-7" stroke="white" stroke-width="2"/>
+                    </svg>
+                </div>
+                <div style="flex: 1;"></div>
+                <div style="display: inline-block; background: #000000; padding: 8px 16px; border-radius: 22px; margin-right: -5px;">
+                    <img src="https://azerrertgrtb.github.io/Revolut/capture3.png" alt="Actions" style="height: 58px !important; width: auto !important; display: block; max-width: none !important; min-height: 58px !important;">
+                </div>
+            </div>
 
-  <script>
-    // Navigation entre pages
-    function showPage(pageId) {
-      document.querySelectorAll('.page').forEach((page) => page.classList.remove('active'));
-      document.getElementById(pageId).classList.add('active');
-    }
+            <div class="content-area">
+                <div class="swiper-container">
+                    <div class="swiper-wrapper" id="swiperWrapper">
+                        <!-- 1 semaine -->
+                        <div class="swiper-slide" data-period="week">
+                            <div class="revenue-circle">
+                                <div class="circle-bg"></div>
+                                <div class="circle-inner">
+                                    <div class="revenue-label">Revenus</div>
+                                    <div class="revenue-amount" contenteditable="true" data-period="1s">2 590 €</div>
+                                    <div class="period">Cette semaine</div>
+                                </div>
+                            </div>
+                        </div>
 
-    // Main Swiper functionality
-    let currentIndex = 1;
-    const wrapper = document.getElementById('swiperWrapper');
-    const slides = document.querySelectorAll('.swiper-slide');
-    const dots = document.querySelectorAll('.dot');
-    const timeButtons = document.querySelectorAll('.time-btn');
+                        <!-- Mois - Novembre à Septembre -->
+                        <div class="swiper-slide" data-period="month">
+                            <div class="month-swiper-container">
+                                <div class="month-swiper-wrapper" id="monthSwiperWrapper">
+                                    <div class="month-slide" data-month="novembre">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 250deg, #7B61FF 250deg 310deg, #1C1C1C 310deg)"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">3 245 €</div>
+                                                <div class="period">novembre</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="month-slide" data-month="decembre">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 270deg, #7B61FF 270deg 330deg, #1C1C1C 330deg)"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">4 892 €</div>
+                                                <div class="period">décembre</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="month-slide" data-month="janvier">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 240deg, #7B61FF 240deg 300deg, #1C1C1C 300deg)"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">2 156 €</div>
+                                                <div class="period">janvier</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="month-slide" data-month="fevrier">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 320deg, #1C1C1C 320deg)"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">416 €</div>
+                                                <div class="period">février</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="month-slide" data-month="mars">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg" style="background: conic-gradient(from -90deg, #7B61FF 0deg 280deg, #00D4FF 280deg 340deg, #1C1C1C 340deg)"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">7 065 €</div>
+                                                <div class="period">mars</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="month-slide" data-month="avril">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 260deg, #7B61FF 260deg 320deg, #1C1C1C 320deg)"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">1 277 €</div>
+                                                <div class="period">avril</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="month-slide" data-month="mai">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 200deg, #7B61FF 200deg 280deg, #4CAF50 280deg 300deg, #1C1C1C 300deg)"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">2 865 €</div>
+                                                <div class="period">mai</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="month-slide" data-month="juin">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 216deg, #7B61FF 216deg 288deg, #1C1C1C 288deg)"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">3 567 €</div>
+                                                <div class="period">juin</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="month-slide" data-month="juillet">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 230deg, #7B61FF 230deg 290deg, #1C1C1C 290deg)"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">4 789 €</div>
+                                                <div class="period">juillet</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="month-slide" data-month="aout">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 210deg, #7B61FF 210deg 285deg, #1C1C1C 285deg)"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">5 456 €</div>
+                                                <div class="period">août</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="month-slide active" data-month="septembre">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">10 361 €</div>
+                                                <div class="period" style="color: #8B8B8B;">Ce mois-ci</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-    // Month swiper variables
-    let currentMonthIndex = 10; // Start at September (position 10)
-    const monthSlides = document.querySelectorAll('.month-slide');
+                        <!-- 6 mois -->
+                        <div class="swiper-slide" data-period="sixmonths">
+                            <div class="revenue-circle">
+                                <div class="circle-bg"></div>
+                                <div class="circle-inner">
+                                    <div class="revenue-label">Revenus</div>
+                                    <div class="revenue-amount" contenteditable="true" data-period="6m">62 166 €</div>
+                                    <div class="period">Ces 6 derniers mois</div>
+                                </div>
+                            </div>
+                        </div>
 
-    let startX = 0;
-    let currentX = 0;
-    let isDragging = false;
-    let startTransform = 0;
-    let isMonthSwiping = false;
+                        <!-- 1 an -->
+                        <div class="swiper-slide" data-period="year">
+                            <div class="revenue-circle">
+                                <div class="circle-bg"></div>
+                                <div class="circle-inner">
+                                    <div class="revenue-label">Revenus</div>
+                                    <div class="revenue-amount" contenteditable="true" data-period="1a">124 332 €</div>
+                                    <div class="period">Cette année</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-    function goToSlide(index) {
-      if (!wrapper || !slides.length) return;
-      currentIndex = Math.max(0, Math.min(index, slides.length - 1));
-      const offset = -currentIndex * 100;
-      wrapper.style.transform = 'translateX(' + offset + '%)';
+                <div class="swipe-indicator">
+                    <div class="dot"></div>
+                    <div class="dot active"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
 
-      dots.forEach((dot, i) => dot.classList.toggle('active', i === currentIndex));
-      timeButtons.forEach((btn, i) => btn.classList.toggle('active', i === currentIndex));
+                <div class="time-selector">
+                    <button class="time-btn" data-index="0">1 s</button>
+                    <button class="time-btn active" data-index="1">1 m</button>
+                    <button class="time-btn" data-index="2">6 m</button>
+                    <button class="time-btn" data-index="3">1 a</button>
+                </div>
 
-      if (currentIndex === 1) { showMonth(currentMonthIndex); }
-      updatePercentages();
-    }
+                <div class="category-section">
+                    <div class="category-header">
+                        <div class="category-title">Par catégorie</div>
+                        <button class="manage-btn">Gérer</button>
+                    </div>
 
-    function showMonth(index, instant = false) {
-      currentMonthIndex = Math.max(0, Math.min(index, monthSlides.length - 1));
-      const monthWrapper = document.getElementById('monthSwiperWrapper');
-      if (monthWrapper) {
-        monthWrapper.style.transition = instant ? 'none' : 'transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-        const offset = -currentMonthIndex * 100;
-        monthWrapper.style.transform = `translateX(${offset}%)`;
-      }
-      updatePercentages();
-    }
+                    <div class="category-item">
+                        <div class="category-icon icon-recharge">
+                            <img src="https://azerrertgrtb.github.io/Revolut/logo1.png" alt="Recharges" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover;">
+                        </div>
+                        <div class="category-info">
+                            <div class="category-name">Recharges</div>
+                            <div class="transaction-count"><span id="rechargeCount">17</span> transactions</div>
+                        </div>
+                        <div class="category-amount">
+                            <div class="amount-value" contenteditable="true" id="rechargeAmount">+7 021 €</div>
+                            <div class="percentage" id="rechargePercent">68%</div>
+                        </div>
+                    </div>
 
-    function updatePercentages() {
-      let mainValue = 0; let rechargeValue = 0; let transferValue = 0;
-      if (currentIndex === 1 && monthSlides[currentMonthIndex]) {
-        const monthRevenue = monthSlides[currentMonthIndex].querySelector('.revenue-amount');
-        if (monthRevenue) mainValue = parseFloat(monthRevenue.textContent.replace(/[^\d]/g, '')) || 0;
-        const monthData = {
-          0: { recharge: 2450, transfer: 795 },
-          1: { recharge: 3890, transfer: 1002 },
-          2: { recharge: 1850, transfer: 306 },
-          3: { recharge: 380, transfer: 36 },
-          4: { recharge: 5800, transfer: 1265 },
-          5: { recharge: 950, transfer: 327 },
-          6: { recharge: 950, transfer: 345 },
-          7: { recharge: 2450, transfer: 1117 },
-          8: { recharge: 3200, transfer: 1589 },
-          9: { recharge: 3350, transfer: 2106 },
-          10:{ recharge: 7021, transfer: 3340 }
-        };
-        const d = monthData[currentMonthIndex] || { recharge: 1000, transfer: 500 };
-        rechargeValue = d.recharge; transferValue = d.transfer;
-      } else if (currentIndex === 0) {
-        rechargeValue = 1850; transferValue = 740;
-        mainValue = parseFloat(slides[currentIndex].querySelector('.revenue-amount').textContent.replace(/[^\d]/g, '')) || 0;
-      } else if (currentIndex === 2) {
-        rechargeValue = 42500; transferValue = 19666;
-        mainValue = parseFloat(slides[currentIndex].querySelector('.revenue-amount').textContent.replace(/[^\d]/g, '')) || 0;
-      } else if (currentIndex === 3) {
-        rechargeValue = 85000; transferValue = 39332;
-        mainValue = parseFloat(slides[currentIndex].querySelector('.revenue-amount').textContent.replace(/[^\d]/g, '')) || 0;
-      }
+                    <div class="category-item">
+                        <div class="category-icon icon-transfer">
+                            <img src="https://azerrertgrtb.github.io/Revolut/logo2.png" alt="Virements" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover;">
+                        </div>
+                        <div class="category-info">
+                            <div class="category-name">Virements</div>
+                            <div class="transaction-count"><span id="transferCount">24</span> transactions</div>
+                        </div>
+                        <div class="category-amount">
+                            <div class="amount-value" contenteditable="true" id="transferAmount">+2 485 €</div>
+                            <div class="percentage" id="transferPercent">24%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-      const rechargeAmount = document.getElementById('rechargeAmount');
-      const transferAmount = document.getElementById('transferAmount');
-      const rechargePercentEl = document.getElementById('rechargePercent');
-      const transferPercentEl = document.getElementById('transferPercent');
+        <div class="bottom-nav"></div>
+    </div>
 
-      if (rechargeAmount && transferAmount) {
-        rechargeAmount.textContent = '+' + rechargeValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' €';
-        transferAmount.textContent  = '+' + transferValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' €';
-        if (mainValue > 0) {
-          const rechargePercent = Math.round((rechargeValue / mainValue) * 100);
-          const transferPercent = Math.round((transferValue / mainValue) * 100);
-          if (rechargePercentEl) rechargePercentEl.textContent = rechargePercent + '%';
-          if (transferPercentEl) transferPercentEl.textContent = transferPercent + '%';
+    <script>
+        // Navigation entre pages
+        function showPage(pageId) {
+            console.log('Navigating to:', pageId);
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
         }
-      }
-    }
 
-    // Month swipe (tactile + souris)
-    if (document.querySelectorAll('.month-slide').length > 0) {
-      const monthContainer = document.querySelector('.month-swiper-container');
-      const monthWrapper = document.getElementById('monthSwiperWrapper');
-      if (monthContainer && monthWrapper) {
-        let monthStartX = 0, monthCurrentX = 0, monthStartTime = 0, velocity = 0;
-        let isMonthSwipingLocal = false;
+        // Main Swiper functionality
+        let currentIndex = 1;
+        const wrapper = document.getElementById('swiperWrapper');
+        const slides = document.querySelectorAll('.swiper-slide');
+        const dots = document.querySelectorAll('.dot');
+        const timeButtons = document.querySelectorAll('.time-btn');
+        
+        // Month swiper variables
+        let currentMonthIndex = 10; // Start at September (position 10 now with 3 new months)
+        const monthSlides = document.querySelectorAll('.month-slide');
+        
+        let startX = 0;
+        let currentX = 0;
+        let isDragging = false;
+        let startTransform = 0;
+        let isMonthSwiping = false;
 
-        monthContainer.addEventListener('touchstart', (e) => {
-          if (currentIndex !== 1) return;
-          monthStartX = e.touches[0].clientX; monthCurrentX = monthStartX; monthStartTime = Date.now();
-          isMonthSwiping = true; isMonthSwipingLocal = true; monthWrapper.style.transition = 'none';
+        function goToSlide(index) {
+            if (!wrapper || !slides.length) return;
+            currentIndex = Math.max(0, Math.min(index, slides.length - 1));
+            const offset = -currentIndex * 100;
+            wrapper.style.transform = 'translateX(' + offset + '%)';
+            
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentIndex);
+            });
+            
+            timeButtons.forEach((btn, i) => {
+                btn.classList.toggle('active', i === currentIndex);
+            });
+            
+            // Show/hide month swiper when on month view
+            if(currentIndex === 1) {
+                showMonth(currentMonthIndex);
+            }
+            
+            updatePercentages();
+        }
+
+        function showMonth(index, instant = false) {
+            currentMonthIndex = Math.max(0, Math.min(index, monthSlides.length - 1));
+            
+            // Apply transform to slide horizontally
+            const monthWrapper = document.getElementById('monthSwiperWrapper');
+            if(monthWrapper) {
+                if(instant) {
+                    monthWrapper.style.transition = 'none';
+                } else {
+                    monthWrapper.style.transition = 'transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                }
+                const offset = -currentMonthIndex * 100;
+                monthWrapper.style.transform = `translateX(${offset}%)`;
+            }
+            
+            updatePercentages();
+        }
+
+        function updatePercentages() {
+            let mainValue = 0;
+            let rechargeValue = 0;
+            let transferValue = 0;
+            
+            // Get the current revenue value based on view
+            if(currentIndex === 1 && monthSlides[currentMonthIndex]) {
+                // Month view - get value from current month
+                const monthRevenue = monthSlides[currentMonthIndex].querySelector('.revenue-amount');
+                if(monthRevenue) {
+                    mainValue = parseFloat(monthRevenue.textContent.replace(/[^\d]/g, '')) || 0;
+                }
+                
+                // Définir les montants selon le mois
+                const monthData = {
+                    0: { recharge: 2450, transfer: 795 },   // novembre
+                    1: { recharge: 3890, transfer: 1002 },  // décembre
+                    2: { recharge: 1850, transfer: 306 },   // janvier
+                    3: { recharge: 380, transfer: 36 },     // février
+                    4: { recharge: 5800, transfer: 1265 },  // mars
+                    5: { recharge: 950, transfer: 327 },    // avril
+                    6: { recharge: 950, transfer: 345 },    // mai (similaire à avril)
+                    7: { recharge: 2450, transfer: 1117 },  // juin
+                    8: { recharge: 3200, transfer: 1589 },  // juillet
+                    9: { recharge: 3350, transfer: 2106 },  // août (similaire à juillet)
+                    10: { recharge: 7021, transfer: 3340 }  // septembre
+                };
+                
+                const currentMonthData = monthData[currentMonthIndex] || { recharge: 1000, transfer: 500 };
+                rechargeValue = currentMonthData.recharge;
+                transferValue = currentMonthData.transfer;
+                
+            } else if(currentIndex === 0) {
+                // 1 semaine
+                rechargeValue = 1850;
+                transferValue = 740;
+                mainValue = parseFloat(slides[currentIndex].querySelector('.revenue-amount').textContent.replace(/[^\d]/g, '')) || 0;
+            } else if(currentIndex === 2) {
+                // 6 mois
+                rechargeValue = 42500;
+                transferValue = 19666;
+                mainValue = parseFloat(slides[currentIndex].querySelector('.revenue-amount').textContent.replace(/[^\d]/g, '')) || 0;
+            } else if(currentIndex === 3) {
+                // 1 an
+                rechargeValue = 85000;
+                transferValue = 39332;
+                mainValue = parseFloat(slides[currentIndex].querySelector('.revenue-amount').textContent.replace(/[^\d]/g, '')) || 0;
+            }
+            
+            const rechargeAmount = document.getElementById('rechargeAmount');
+            const transferAmount = document.getElementById('transferAmount');
+            const rechargePercentEl = document.getElementById('rechargePercent');
+            const transferPercentEl = document.getElementById('transferPercent');
+            
+            if(rechargeAmount && transferAmount) {
+                // Formater et afficher les montants
+                rechargeAmount.textContent = '+' + rechargeValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' €';
+                transferAmount.textContent = '+' + transferValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' €';
+                
+                // Calculer et afficher les pourcentages
+                if(mainValue > 0) {
+                    const rechargePercent = Math.round((rechargeValue / mainValue) * 100);
+                    const transferPercent = Math.round((transferValue / mainValue) * 100);
+                    
+                    if(rechargePercentEl) rechargePercentEl.textContent = rechargePercent + '%';
+                    if(transferPercentEl) transferPercentEl.textContent = transferPercent + '%';
+                }
+            }
+        }
+
+        // Month swiper touch events
+        if(monthSlides.length > 0) {
+            const monthContainer = document.querySelector('.month-swiper-container');
+            const monthWrapper = document.getElementById('monthSwiperWrapper');
+            
+            if(monthContainer && monthWrapper) {
+                let monthStartX = 0;
+                let monthCurrentX = 0;
+                let monthStartTime = 0;
+                let velocity = 0;
+                
+                monthContainer.addEventListener('touchstart', (e) => {
+                    if(currentIndex !== 1) return;
+                    monthStartX = e.touches[0].clientX;
+                    monthCurrentX = monthStartX;
+                    monthStartTime = Date.now();
+                    isMonthSwiping = true;
+                    monthWrapper.style.transition = 'none';
+                });
+
+                monthContainer.addEventListener('touchmove', (e) => {
+                    if(!isMonthSwiping || currentIndex !== 1) return;
+                    e.preventDefault();
+                    
+                    const previousX = monthCurrentX;
+                    monthCurrentX = e.touches[0].clientX;
+                    velocity = monthCurrentX - previousX;
+                    
+                    const diff = monthCurrentX - monthStartX;
+                    const currentOffset = -currentMonthIndex * 100;
+                    const dragOffset = (diff / monthContainer.offsetWidth) * 100;
+                    const newOffset = currentOffset + dragOffset;
+                    
+                    // Add resistance at edges
+                    if((currentMonthIndex === 0 && diff > 0) || 
+                       (currentMonthIndex === monthSlides.length - 1 && diff < 0)) {
+                        monthWrapper.style.transform = `translateX(${currentOffset + dragOffset * 0.3}%)`;
+                    } else {
+                        monthWrapper.style.transform = `translateX(${newOffset}%)`;
+                    }
+                });
+
+                monthContainer.addEventListener('touchend', (e) => {
+                    if(!isMonthSwiping || currentIndex !== 1) return;
+                    isMonthSwiping = false;
+                    
+                    const diff = monthCurrentX - monthStartX;
+                    const timeDiff = Date.now() - monthStartTime;
+                    const speed = Math.abs(diff / timeDiff);
+                    
+                    // Use velocity and speed for better swipe detection
+                    const threshold = monthContainer.offsetWidth * 0.15;
+                    const shouldSwipe = Math.abs(diff) > threshold || speed > 0.3;
+                    
+                    monthWrapper.style.transition = 'transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                    
+                    if (shouldSwipe) {
+                        if (diff < 0 && currentMonthIndex < monthSlides.length - 1) {
+                            showMonth(currentMonthIndex + 1);
+                        } else if (diff > 0 && currentMonthIndex > 0) {
+                            showMonth(currentMonthIndex - 1);
+                        } else {
+                            showMonth(currentMonthIndex);
+                        }
+                    } else {
+                        showMonth(currentMonthIndex);
+                    }
+                });
+
+                // Mouse events for desktop testing
+                let mouseDown = false;
+                
+                monthContainer.addEventListener('mousedown', (e) => {
+                    if(currentIndex !== 1) return;
+                    monthStartX = e.clientX;
+                    monthCurrentX = monthStartX;
+                    monthStartTime = Date.now();
+                    mouseDown = true;
+                    monthWrapper.style.transition = 'none';
+                    e.preventDefault();
+                });
+
+                document.addEventListener('mousemove', (e) => {
+                    if(!mouseDown || currentIndex !== 1) return;
+                    
+                    const previousX = monthCurrentX;
+                    monthCurrentX = e.clientX;
+                    velocity = monthCurrentX - previousX;
+                    
+                    const diff = monthCurrentX - monthStartX;
+                    const currentOffset = -currentMonthIndex * 100;
+                    const dragOffset = (diff / monthContainer.offsetWidth) * 100;
+                    const newOffset = currentOffset + dragOffset;
+                    
+                    if((currentMonthIndex === 0 && diff > 0) || 
+                       (currentMonthIndex === monthSlides.length - 1 && diff < 0)) {
+                        monthWrapper.style.transform = `translateX(${currentOffset + dragOffset * 0.3}%)`;
+                    } else {
+                        monthWrapper.style.transform = `translateX(${newOffset}%)`;
+                    }
+                });
+
+                document.addEventListener('mouseup', (e) => {
+                    if(!mouseDown || currentIndex !== 1) return;
+                    mouseDown = false;
+                    
+                    const diff = monthCurrentX - monthStartX;
+                    const timeDiff = Date.now() - monthStartTime;
+                    const speed = Math.abs(diff / timeDiff);
+                    
+                    const threshold = monthContainer.offsetWidth * 0.15;
+                    const shouldSwipe = Math.abs(diff) > threshold || speed > 0.3;
+                    
+                    monthWrapper.style.transition = 'transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                    
+                    if (shouldSwipe) {
+                        if (diff < 0 && currentMonthIndex < monthSlides.length - 1) {
+                            showMonth(currentMonthIndex + 1);
+                        } else if (diff > 0 && currentMonthIndex > 0) {
+                            showMonth(currentMonthIndex - 1);
+                        } else {
+                            showMonth(currentMonthIndex);
+                        }
+                    } else {
+                        showMonth(currentMonthIndex);
+                    }
+                });
+            }
+        }
+
+        // Main swiper touch events
+        if(wrapper) {
+            wrapper.addEventListener('touchstart', (e) => {
+                if(isMonthSwiping) return;
+                startX = e.touches[0].clientX;
+                isDragging = true;
+                startTransform = currentIndex * 100;
+                wrapper.style.transition = 'none';
+            });
+
+            wrapper.addEventListener('touchmove', (e) => {
+                if (!isDragging || isMonthSwiping) return;
+                currentX = e.touches[0].clientX;
+                const diff = startX - currentX;
+                const percentDiff = (diff / window.innerWidth) * 100;
+                const newTransform = -(startTransform + percentDiff);
+                wrapper.style.transform = 'translateX(' + newTransform + '%)';
+            });
+
+            wrapper.addEventListener('touchend', (e) => {
+                if (!isDragging || isMonthSwiping) return;
+                isDragging = false;
+                wrapper.style.transition = 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                
+                const diff = startX - currentX;
+                const threshold = window.innerWidth * 0.2;
+                
+                if (diff > threshold && currentIndex < slides.length - 1) {
+                    goToSlide(currentIndex + 1);
+                } else if (diff < -threshold && currentIndex > 0) {
+                    goToSlide(currentIndex - 1);
+                } else {
+                    goToSlide(currentIndex);
+                }
+            });
+        }
+
+        timeButtons.forEach((btn, index) => {
+            btn.addEventListener('click', () => {
+                goToSlide(index);
+            });
         });
-        monthContainer.addEventListener('touchmove', (e) => {
-          if (!isMonthSwipingLocal || currentIndex !== 1) return; e.preventDefault();
-          const previousX = monthCurrentX; monthCurrentX = e.touches[0].clientX; velocity = monthCurrentX - previousX;
-          const diff = monthCurrentX - monthStartX; const currentOffset = -currentMonthIndex * 100;
-          const dragOffset = (diff / monthContainer.offsetWidth) * 100; const newOffset = currentOffset + dragOffset;
-          if ((currentMonthIndex === 0 && diff > 0) || (currentMonthIndex === document.querySelectorAll('.month-slide').length - 1 && diff < 0)) {
-            monthWrapper.style.transform = `translateX(${currentOffset + dragOffset * 0.3}%)`;
-          } else { monthWrapper.style.transform = `translateX(${newOffset}%)`; }
-        }, { passive: false });
-        monthContainer.addEventListener('touchend', () => {
-          if (!isMonthSwipingLocal || currentIndex !== 1) return; isMonthSwiping = false; isMonthSwipingLocal = false;
-          const diff = monthCurrentX - monthStartX; const timeDiff = Date.now() - monthStartTime; const speed = Math.abs(diff / timeDiff);
-          const threshold = monthContainer.offsetWidth * 0.15; const shouldSwipe = Math.abs(diff) > threshold || speed > 0.3;
-          monthWrapper.style.transition = 'transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-          if (shouldSwipe) { if (diff < 0 && currentMonthIndex < document.querySelectorAll('.month-slide').length - 1) showMonth(currentMonthIndex + 1); else if (diff > 0 && currentMonthIndex > 0) showMonth(currentMonthIndex - 1); else showMonth(currentMonthIndex); }
-          else { showMonth(currentMonthIndex); }
+
+        function formatNumber(value) {
+            const number = value.replace(/[^\d,\.]/g, '');
+            const parts = number.split(/[,\.]/);
+            if (parts.length > 1) {
+                return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ',' + parts[1].substring(0, 2);
+            }
+            return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+        }
+
+        // Format editable amounts
+        document.querySelectorAll('.revenue-amount, #mainBalance').forEach(element => {
+            element.addEventListener('focus', function() {
+                this.textContent = this.textContent.replace(/[^\d,\.]/g, '');
+            });
+            
+            element.addEventListener('blur', function() {
+                const value = this.textContent.replace(/[^\d,\.]/g, '');
+                if (value) {
+                    const formatted = formatNumber(value);
+                    this.textContent = formatted + ' €';
+                    updatePercentages();
+                } else {
+                    this.textContent = '0 €';
+                }
+            });
+            
+            element.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    this.blur();
+                }
+            });
         });
 
-        // Souris (tests desktop)
-        let mouseDown = false;
-        monthContainer.addEventListener('mousedown', (e) => {
-          if (currentIndex !== 1) return; monthStartX = e.clientX; monthCurrentX = monthStartX; monthStartTime = Date.now();
-          mouseDown = true; monthWrapper.style.transition = 'none'; e.preventDefault();
-        });
-        document.addEventListener('mousemove', (e) => {
-          if (!mouseDown || currentIndex !== 1) return;
-          const previousX = monthCurrentX; monthCurrentX = e.clientX; velocity = monthCurrentX - previousX;
-          const diff = monthCurrentX - monthStartX; const currentOffset = -currentMonthIndex * 100;
-          const dragOffset = (diff / monthContainer.offsetWidth) * 100; const newOffset = currentOffset + dragOffset;
-          if ((currentMonthIndex === 0 && diff > 0) || (currentMonthIndex === document.querySelectorAll('.month-slide').length - 1 && diff < 0)) {
-            monthWrapper.style.transform = `translateX(${currentOffset + dragOffset * 0.3}%)`;
-          } else { monthWrapper.style.transform = `translateX(${newOffset}%)`; }
-        });
-        document.addEventListener('mouseup', () => {
-          if (!mouseDown || currentIndex !== 1) return; mouseDown = false;
-          const diff = monthCurrentX - monthStartX; const timeDiff = Date.now() - monthStartTime; const speed = Math.abs(diff / timeDiff);
-          const threshold = monthContainer.offsetWidth * 0.15; const shouldSwipe = Math.abs(diff) > threshold || speed > 0.3;
-          monthWrapper.style.transition = 'transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-          if (shouldSwipe) { if (diff < 0 && currentMonthIndex < document.querySelectorAll('.month-slide').length - 1) showMonth(currentMonthIndex + 1); else if (diff > 0 && currentMonthIndex > 0) showMonth(currentMonthIndex - 1); else showMonth(currentMonthIndex); }
-          else { showMonth(currentMonthIndex); }
-        });
-      }
-    }
-
-    // Main swiper touch events
-    if (wrapper) {
-      wrapper.addEventListener('touchstart', (e) => {
-        if (isMonthSwiping) return; startX = e.touches[0].clientX; isDragging = true; startTransform = currentIndex * 100; wrapper.style.transition = 'none';
-      });
-      wrapper.addEventListener('touchmove', (e) => {
-        if (!isDragging || isMonthSwiping) return; currentX = e.touches[0].clientX; const diff = startX - currentX; const percentDiff = (diff / window.innerWidth) * 100; const newTransform = -(startTransform + percentDiff); wrapper.style.transform = 'translateX(' + newTransform + '%)';
-      });
-      wrapper.addEventListener('touchend', () => {
-        if (!isDragging || isMonthSwiping) return; isDragging = false; wrapper.style.transition = 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-        const diff = startX - currentX; const threshold = window.innerWidth * 0.2;
-        if (diff > threshold && currentIndex < slides.length - 1) goToSlide(currentIndex + 1);
-        else if (diff < -threshold && currentIndex > 0) goToSlide(currentIndex - 1);
-        else goToSlide(currentIndex);
-      });
-    }
-
-    timeButtons.forEach((btn, index) => btn.addEventListener('click', () => goToSlide(index)));
-
-    function formatNumber(value) {
-      const number = value.replace(/[^\d,\.]/g, '');
-      const parts = number.split(/[,\.]/);
-      if (parts.length > 1) return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ',' + parts[1].substring(0, 2);
-      return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-    }
-
-    document.querySelectorAll('.revenue-amount, #mainBalance').forEach((el) => {
-      el.addEventListener('focus', function () { this.textContent = this.textContent.replace(/[^\d,\.]/g, ''); });
-      el.addEventListener('blur', function () { const value = this.textContent.replace(/[^\d,\.]/g, ''); this.textContent = value ? formatNumber(value) + ' €' : '0 €'; updatePercentages(); });
-      el.addEventListener('keypress', function (e) { if (e.key === 'Enter') { e.preventDefault(); this.blur(); } });
-    });
-
-    // Initialize
-    if (wrapper && slides.length > 0) { goToSlide(1); }
-    if (document.querySelectorAll('.month-slide').length > 0) { showMonth(10, true); }
-    updatePercentages();
-    showPage('homePage');
-  </script>
+        // Initialize
+        if(wrapper && slides.length > 0) {
+            goToSlide(1);
+        }
+        if(monthSlides.length > 0) {
+            showMonth(10, true); // Start at September (position 10 now), instant load
+        }
+        updatePercentages();
+        
+        // Ensure we start on home page
+        showPage('homePage');
+    </script>
 </body>
 </html>
