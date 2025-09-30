@@ -811,37 +811,44 @@
 :root { 
   /* Ajuste ici la remontée : -10mm = 1 cm vers le haut */
   --home-shift-y: -10mm;
-}
+}<!-- PATCH: fixe l'écran d'accueil (descend l'image de 1,5 cm et garde le haut visible) -->
+<style>
+  /* Descend l'image de 1.5 cm (ajuste ici si besoin) */
+  :root{ --home-shift-down: 15mm; }
 
-#homePage{
-  position: fixed !important;
-  inset: 0 !important;
-  width: 100% !important;
-  height: 100dvh !important;   /* plein écran réel mobile */
-  min-height: 100svh;          /* fallback sûr */
-  overflow: hidden !important;
-  background: #000 !important;
-}
+  /* Conteneur plein écran sans bande noire */
+  #homePage{
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100dvh !important;
+    min-height: 100svh;
+    overflow: hidden !important;
+    background: #000 !important;
+  }
 
-/* Cible UNIQUEMENT l'image d'accueil existante, sans toucher le reste */
-#homePage > img[alt="Accueil"]{
-  position: absolute !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;        /* colle l'image en bas */
-  top: auto !important;         /* annule le top:0 inline */
-  width: 100vw !important;
-  height: 100dvh !important;    /* remplit 100% de la hauteur visible */
-  object-fit: cover !important;
-  object-position: center bottom !important; /* on garde le bas réel de l'image */
-  transform: translateY(var(--home-shift-y)) !important; /* remonte l'image */
-}
+  /* CIBLE UNIQUEMENT l'image d'accueil existante */
+  #homePage > img[alt="Accueil"]{
+    position: absolute !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;      /* colle en bas de l'écran */
+    top: auto !important;
+    width: 100vw !important;
+    height: 100dvh !important;  /* remplit tout l'écran */
+    object-fit: cover !important;
+    object-position: center top !important;    /* on préserve le HAUT de l'image */
+    transform: translateY(var(--home-shift-down)) !important; /* on DESCEND l'image de 1.5 cm */
+  }
 
-/* Fallback anciens navigateurs sans 100dvh */
-@supports not (height: 100dvh){
-  #homePage{ height: 100vh !important; }
-  #homePage > img[alt="Accueil"]{ height: 100vh !important; }
-}
+  /* Fallback vieux navigateurs */
+  @supports not (height: 100dvh){
+    #homePage, #homePage > img[alt="Accueil"]{ height: 100vh !important; }
+  }
+</style>
+
+
+
 
     </style>
 </head>
