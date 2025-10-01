@@ -813,23 +813,23 @@
 <body>
     <!-- Page Accueil -->
     <div class="page active" id="homePage" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; overflow: hidden; background: #000;">
-        <!-- ✅ Image corrigée -->
+        <!-- Image d’accueil descendue de ~1 cm, sans bande noire et bas conservé plein écran -->
         <img 
             src="https://azerrertgrtb.github.io/Revolut/capture4.jpg" 
             alt="Accueil" 
             style="position: absolute; 
-                   inset: 0; 
+                   top: 0; 
+                   left: 0; 
                    width: 100%; 
                    height: 100%; 
                    min-height: 100vh; 
                    height: 100svh; 
                    height: -webkit-fill-available; 
                    object-fit: cover; 
-                   object-position: bottom center; 
-                   padding-bottom: env(safe-area-inset-bottom); 
+                   object-position: 50% calc(100% + 1cm); 
                    display: block;">
         
-        <!-- Zone cliquable invisible -->
+        <!-- Zone cliquable invisible sur le bouton Informations -->
         <div style="position: absolute; top: 56%; left: 37%; width: 80px; height: 80px; cursor: pointer; z-index: 10;" onclick="showPage('analyticsPage')"></div>
     </div>
 
@@ -851,11 +851,257 @@
             <div class="content-area">
                 <div class="swiper-container">
                     <div class="swiper-wrapper" id="swiperWrapper">
-                        <!-- (tout le reste de ton contenu analytics inchangé) -->
+                        <!-- 1 semaine -->
+                        <div class="swiper-slide" data-period="week">
+                            <div class="revenue-circle">
+                                <div class="circle-bg"></div>
+                                <div class="circle-inner">
+                                    <div class="revenue-label">Revenus</div>
+                                    <div class="revenue-amount" contenteditable="true" data-period="1s">2 590 €</div>
+                                    <div class="period">Cette semaine</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mois - Novembre à Septembre -->
+                        <div class="swiper-slide" data-period="month">
+                            <div class="month-swiper-container">
+                                <div class="month-swiper-wrapper" id="monthSwiperWrapper">
+                                    <div class="month-slide" data-month="novembre">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 250deg, #7B61FF 250deg 310deg, #1C1C1C 310deg)"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">3 245 €</div>
+                                                <div class="period">novembre</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="month-slide" data-month="decembre">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 270deg, #7B61FF 270deg 330deg, #1C1C1C 330deg)"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">4 892 €</div>
+                                                <div class="period">décembre</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="month-slide" data-month="janvier">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 240deg, #7B61FF 240deg 300deg, #1C1C1C 300deg)"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">2 156 €</div>
+                                                <div class="period">janvier</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="month-slide" data-month="fevrier">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 320deg, #1C1C1C 320deg)"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">416 €</div>
+                                                <div class="period">février</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="month-slide" data-month="mars">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg" style="background: conic-gradient(from -90deg, #7B61FF 0deg 280deg, #00D4FF 280deg 340deg, #1C1C1C 340deg)"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">7 065 €</div>
+                                                <div class="period">mars</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="month-slide" data-month="avril">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 260deg, #7B61FF 260deg 320deg, #1C1C1C 320deg)"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">1 277 €</div>
+                                                <div class="period">avril</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="month-slide" data-month="mai">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 200deg, #7B61FF 200deg 280deg, #4CAF50 280deg 300deg, #1C1C1C 300deg)"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">2 865 €</div>
+                                                <div class="period">mai</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="month-slide" data-month="juin">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 216deg, #7B61FF 216deg 288deg, #1C1C1C 288deg)"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">3 567 €</div>
+                                                <div class="period">juin</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="month-slide" data-month="juillet">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 230deg, #7B61FF 230deg 290deg, #1C1C1C 290deg)"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">4 789 €</div>
+                                                <div class="period">juillet</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="month-slide" data-month="aout">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 210deg, #7B61FF 210deg 280deg, #1C1C1C 280deg)"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">1 234 €</div>
+                                                <div class="period">août</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="month-slide" data-month="septembre">
+                                        <div class="revenue-circle">
+                                            <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 240deg, #7B61FF 240deg 300deg, #1C1C1C 300deg)"></div>
+                                            <div class="circle-inner">
+                                                <div class="revenue-label">Revenus</div>
+                                                <div class="revenue-amount" contenteditable="true">3 890 €</div>
+                                                <div class="period">septembre</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="swipe-indicator">
+                                <div class="dot active"></div>
+                                <div class="dot"></div>
+                            </div>
+
+                            <div class="time-selector">
+                                <button class="time-btn" data-period="1s">1s</button>
+                                <button class="time-btn active" data-period="1m">1m</button>
+                                <button class="time-btn" data-period="3m">3m</button>
+                                <button class="time-btn" data-period="6m">6m</button>
+                                <button class="time-btn" data-period="1a">1a</button>
+                                <button class="time-btn" data-period="total">Total</button>
+                            </div>
+
+                            <div class="category-section">
+                                <div class="category-header">
+                                    <h3 class="category-title">Catégories</h3>
+                                    <button class="manage-btn">Gérer</button>
+                                </div>
+
+                                <div class="category-item">
+                                    <div class="category-icon icon-recharge">
+                                        <svg viewBox="0 0 24 24">
+                                            <path d="M12 2v9m0 0l3-3m-3 3L9 8m-7 4a10 10 0 1020 0 10 10 0 00-20 0z" stroke="white" stroke-width="2" fill="none"/>
+                                        </svg>
+                                    </div>
+                                    <div class="category-info">
+                                        <div class="category-name">Recharges & autres</div>
+                                        <div class="transaction-count">24 transactions</div>
+                                    </div>
+                                    <div class="category-amount">
+                                        <div class="amount-value" contenteditable="true">2 156 €</div>
+                                        <div class="percentage">60%</div>
+                                    </div>
+                                </div>
+
+                                <div class="category-item">
+                                    <div class="category-icon icon-transfer">
+                                        <svg viewBox="0 0 24 24">
+                                            <path d="M7 10l5 5 5-5M12 5v10" stroke="white" stroke-width="2" fill="none"/>
+                                        </svg>
+                                    </div>
+                                    <div class="category-info">
+                                        <div class="category-name">Transferts</div>
+                                        <div class="transaction-count">8 transactions</div>
+                                    </div>
+                                    <div class="category-amount">
+                                        <div class="amount-value" contenteditable="true">1 233 €</div>
+                                        <div class="percentage">35%</div>
+                                    </div>
+                                </div>
+
+                                <div class="category-item">
+                                    <div class="category-icon icon-general">
+                                        <svg viewBox="0 0 24 24">
+                                            <circle cx="12" cy="12" r="10" stroke="white" stroke-width="2" fill="none"/>
+                                        </svg>
+                                    </div>
+                                    <div class="category-info">
+                                        <div class="category-name">Général</div>
+                                        <div class="transaction-count">3 transactions</div>
+                                    </div>
+                                    <div class="category-amount">
+                                        <div class="amount-value" contenteditable="true">178 €</div>
+                                        <div class="percentage">5%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3 mois -->
+                        <div class="swiper-slide" data-period="3months">
+                            <div class="revenue-circle">
+                                <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 290deg, #7B61FF 290deg 340deg, #1C1C1C 340deg)"></div>
+                                <div class="circle-inner">
+                                    <div class="revenue-label">Revenus</div>
+                                    <div class="revenue-amount" contenteditable="true" data-period="3m">8 345 €</div>
+                                    <div class="period">3 derniers mois</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 6 mois -->
+                        <div class="swiper-slide" data-period="6months">
+                            <div class="revenue-circle">
+                                <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 300deg, #7B61FF 300deg 350deg, #1C1C1C 350deg)"></div>
+                                <div class="circle-inner">
+                                    <div class="revenue-label">Revenus</div>
+                                    <div class="revenue-amount" contenteditable="true" data-period="6m">15 780 €</div>
+                                    <div class="period">6 derniers mois</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 1 an -->
+                        <div class="swiper-slide" data-period="year">
+                            <div class="revenue-circle">
+                                <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 310deg, #7B61FF 310deg 355deg, #1C1C1C 355deg)"></div>
+                                <div class="circle-inner">
+                                    <div class="revenue-label">Revenus</div>
+                                    <div class="revenue-amount" contenteditable="true" data-period="1a">28 456 €</div>
+                                    <div class="period">Cette année</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Total -->
+                        <div class="swiper-slide" data-period="total">
+                            <div class="revenue-circle">
+                                <div class="circle-bg" style="background: conic-gradient(from -90deg, #00D4FF 0deg 320deg, #7B61FF 320deg 359deg, #1C1C1C 359deg)"></div>
+                                <div class="circle-inner">
+                                    <div class="revenue-label">Revenus</div>
+                                    <div class="revenue-amount" contenteditable="true" data-period="total">45 230 €</div>
+                                    <div class="period">Total</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="bottom-nav"></div>
     </div>
 
@@ -946,6 +1192,7 @@
                     dot.classList.toggle('active', index === (currentSlide === 0 ? 0 : 1));
                 });
 
+                // Update time buttons based on slide
                 timeButtons.forEach(btn => {
                     btn.classList.remove('active');
                 });
@@ -976,6 +1223,7 @@
                 monthWrapper.style.transform = `translateX(-${monthSlide * 100}%)`;
             }
 
+            // Time button clicks
             timeButtons.forEach((btn, index) => {
                 btn.addEventListener('click', () => {
                     currentSlide = index;
@@ -983,6 +1231,7 @@
                 });
             });
 
+            // Make amounts editable
             document.querySelectorAll('.revenue-amount[contenteditable="true"]').forEach(el => {
                 el.addEventListener('blur', function() {
                     if (this.textContent.trim() === '') {
@@ -1001,6 +1250,7 @@
                 });
             });
 
+            // Category amounts editable
             document.querySelectorAll('.amount-value[contenteditable="true"]').forEach(el => {
                 el.addEventListener('blur', function() {
                     if (this.textContent.trim() === '') {
@@ -1020,6 +1270,7 @@
             });
         }
 
+        // Initialize on load
         document.addEventListener('DOMContentLoaded', () => {
             if (currentPage === 'analyticsPage') {
                 initSwiper();
