@@ -812,12 +812,12 @@
 </head>
 <body>
     <!-- Page Accueil -->
-    <div class="page active" id="homePage" style="position: fixed; top: 0; left: 0; height: 100%; width: 100%; overflow: hidden; background: #000;">
-        <!-- Image ajustée pour remplir tout l'écran avec le décalage -->
-        <img src="https://azerrertgrtb.github.io/Revolut/capture4.jpg" alt="Accueil" style="position: absolute; top: 0; left: 0; width: 100%; height: calc(100% + 20px); object-fit: cover; transform: translateY(20px);">
+    <div class="page active" id="homePage" style="position: absolute; top: -50px; left: 0; right: 0; bottom: -50px; background: #000;">
+        <!-- Image avec marge négative pour compenser les safe areas -->
+        <img src="https://azerrertgrtb.github.io/Revolut/capture4.jpg" alt="Accueil" style="position: absolute; top: 0; left: 0; width: 100%; height: 110%; object-fit: cover;">
         
         <!-- Zone cliquable invisible sur le bouton Informations -->
-        <div style="position: absolute; top: 56%; left: 37%; width: 80px; height: 80px; cursor: pointer; z-index: 10;" onclick="showPage('analyticsPage')"></div>
+        <div style="position: absolute; top: calc(56% + 25px); left: 37%; width: 80px; height: 80px; cursor: pointer; z-index: 10;" onclick="showPage('analyticsPage')"></div>
     </div>
 
     <!-- Page Analytics -->
