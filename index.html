@@ -806,3 +806,276 @@
                 
                 // Définir les montants selon le mois
                 const monthData = {
+                    0: { recharge: 2450, transfer: 795 },   // novembre
+                    1: { recharge: 3890, transfer: 1002 },  // décembre
+                    2: { recharge: 1850, transfer: 306 },   // janvier
+                    3: { recharge: 380, transfer: 36 },     // février
+                    4: { recharge: 5800, transfer: 1265 },  // mars
+                    5: { recharge: 950, transfer: 327 },    // avril
+                    6: { recharge: 950, transfer: 345 },    // mai (similaire à avril)
+                    7: { recharge: 2450, transfer: 1117 },  // juin
+                    8: { recharge: 3200, transfer: 1589 },  // juillet
+                    9: { recharge: 3350, transfer: 2106 },  // août (similaire à juillet)
+                    10: { recharge: 7021, transfer: 3340 }  // septembre
+                };
+                
+                const currentMonthData = monthData[currentMonthIndex] || { recharge: 1000, transfer: 500 };
+                rechargeValue = currentMonthData.recharge;
+                transferValue = currentMonthData.transfer;
+                
+            } else if(currentIndex === 0) {
+                // 1 semaine
+                rechargeValue = 1850;
+                transferValue = 740;
+                mainValue = parseFloat(slides[currentIndex].querySelector('.revenue-amount').textContent.replace(/[^\d]/g, '')) || 0;
+            } else if(currentIndex === 2) {
+                // 6 mois
+                rechargeValue = 42500;
+                transferValue = 19666;
+                mainValue = parseFloat(slides[currentIndex].querySelector('.revenue-amount').textContent.replace(/[^\d]/g, '')) || 0;
+            } else if(currentIndex === 3) {
+                // 1 an
+                rechargeValue = 85000;
+                transferValue = 39332;
+                mainValue = parseFloat(slides[currentIndex].querySelector('.revenue-amount').textContent.replace(/[^\d]/g, '')) || 0;
+            }
+            
+            const rechargeAmount = document.getElementById('rechargeAmount');
+            const transferAmount = document.getElementById('transferAmount');
+            const rechargePercentEl = document.getElementById('rechargePercent');
+            const transferPercentEl = document.getElementById('transferPercent');
+            
+            if(rechargeAmount && transferAmount) {
+                // Formater et afficher les montants
+                rechargeAmount.textContent = '+' + rechargeValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' €';
+                transferAmount.textContent = '+' + transferValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' €';
+                
+                // Calculer et afficher les pourcentages
+                if(mainValue > 0) {
+                    const rechargePercent = Math.round((rechargeValue / mainValue) * 100);
+                    const transferPercent = Math.round((transferValue / mainValue) * 100);
+                    
+                    if(rechargePercentEl) rechargePercentEl.textContent = rechargePercent + '%';
+                    if(transferPercentEl) transferPercentEl.textContent = transferPercent + '%';
+                }
+            }
+        }
+
+        // Month swiper touch events
+        if(monthSlides.length > 0) {
+            const monthContainer = document.querySelector('.month-swiper-container');
+            const monthWrapper = document.getElementById('monthSwiperWrapper');
+            
+            if(monthContainer && monthWrapper) {
+                let monthStartX = 0;
+                let monthCurrentX = 0;
+                let monthStartTime = 0;
+                let velocity = 0;
+                
+                monthContainer.addEventListener('touchstart', (e) => {
+                    if(currentIndex !== 1) return;
+                    monthStartX = e.touches[0].clientX;
+                    monthCurrentX = monthStartX;
+                    monthStartTime = Date.now();
+                    isMonthSwiping = true;
+                    monthWrapper.style.transition = 'none';
+                });
+
+                monthContainer.addEventListener('touchmove', (e) => {
+                    if(!isMonthSwiping || currentIndex !== 1) return;
+                    e.preventDefault();
+                    
+                    const previousX = monthCurrentX;
+                    monthCurrentX = e.touches[0].clientX;
+                    velocity = monthCurrentX - previousX;
+                    
+                    const diff = monthCurrentX - monthStartX;
+                    const currentOffset = -currentMonthIndex * 100;
+                    const dragOffset = (diff / monthContainer.offsetWidth) * 100;
+                    const newOffset = currentOffset + dragOffset;
+                    
+                    // Add resistance at edges
+                    if((currentMonthIndex === 0 && diff > 0) || 
+                       (currentMonthIndex === monthSlides.length - 1 && diff < 0)) {
+                        monthWrapper.style.transform = `translateX(${currentOffset + dragOffset * 0.3}%)`;
+                    } else {
+                        monthWrapper.style.transform = `translateX(${newOffset}%)`;
+                    }
+                });
+
+                monthContainer.addEventListener('touchend', (e) => {
+                    if(!isMonthSwiping || currentIndex !== 1) return;
+                    isMonthSwiping = false;
+                    
+                    const diff = monthCurrentX - monthStartX;
+                    const timeDiff = Date.now() - monthStartTime;
+                    const speed = Math.abs(diff / timeDiff);
+                    
+                    // Use velocity and speed for better swipe detection
+                    const threshold = monthContainer.offsetWidth * 0.15;
+                    const shouldSwipe = Math.abs(diff) > threshold || speed > 0.3;
+                    
+                    monthWrapper.style.transition = 'transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                    
+                    if (shouldSwipe) {
+                        if (diff < 0 && currentMonthIndex < monthSlides.length - 1) {
+                            showMonth(currentMonthIndex + 1);
+                        } else if (diff > 0 && currentMonthIndex > 0) {
+                            showMonth(currentMonthIndex - 1);
+                        } else {
+                            showMonth(currentMonthIndex);
+                        }
+                    } else {
+                        showMonth(currentMonthIndex);
+                    }
+                });
+
+                // Mouse events for desktop testing
+                let mouseDown = false;
+                
+                monthContainer.addEventListener('mousedown', (e) => {
+                    if(currentIndex !== 1) return;
+                    monthStartX = e.clientX;
+                    monthCurrentX = monthStartX;
+                    monthStartTime = Date.now();
+                    mouseDown = true;
+                    monthWrapper.style.transition = 'none';
+                    e.preventDefault();
+                });
+
+                document.addEventListener('mousemove', (e) => {
+                    if(!mouseDown || currentIndex !== 1) return;
+                    
+                    const previousX = monthCurrentX;
+                    monthCurrentX = e.clientX;
+                    velocity = monthCurrentX - previousX;
+                    
+                    const diff = monthCurrentX - monthStartX;
+                    const currentOffset = -currentMonthIndex * 100;
+                    const dragOffset = (diff / monthContainer.offsetWidth) * 100;
+                    const newOffset = currentOffset + dragOffset;
+                    
+                    if((currentMonthIndex === 0 && diff > 0) || 
+                       (currentMonthIndex === monthSlides.length - 1 && diff < 0)) {
+                        monthWrapper.style.transform = `translateX(${currentOffset + dragOffset * 0.3}%)`;
+                    } else {
+                        monthWrapper.style.transform = `translateX(${newOffset}%)`;
+                    }
+                });
+
+                document.addEventListener('mouseup', (e) => {
+                    if(!mouseDown || currentIndex !== 1) return;
+                    mouseDown = false;
+                    
+                    const diff = monthCurrentX - monthStartX;
+                    const timeDiff = Date.now() - monthStartTime;
+                    const speed = Math.abs(diff / timeDiff);
+                    
+                    const threshold = monthContainer.offsetWidth * 0.15;
+                    const shouldSwipe = Math.abs(diff) > threshold || speed > 0.3;
+                    
+                    monthWrapper.style.transition = 'transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                    
+                    if (shouldSwipe) {
+                        if (diff < 0 && currentMonthIndex < monthSlides.length - 1) {
+                            showMonth(currentMonthIndex + 1);
+                        } else if (diff > 0 && currentMonthIndex > 0) {
+                            showMonth(currentMonthIndex - 1);
+                        } else {
+                            showMonth(currentMonthIndex);
+                        }
+                    } else {
+                        showMonth(currentMonthIndex);
+                    }
+                });
+            }
+        }
+
+        // Main swiper touch events
+        if(wrapper) {
+            wrapper.addEventListener('touchstart', (e) => {
+                if(isMonthSwiping) return;
+                startX = e.touches[0].clientX;
+                isDragging = true;
+                startTransform = currentIndex * 100;
+                wrapper.style.transition = 'none';
+            });
+
+            wrapper.addEventListener('touchmove', (e) => {
+                if (!isDragging || isMonthSwiping) return;
+                currentX = e.touches[0].clientX;
+                const diff = startX - currentX;
+                const percentDiff = (diff / window.innerWidth) * 100;
+                const newTransform = -(startTransform + percentDiff);
+                wrapper.style.transform = 'translateX(' + newTransform + '%)';
+            });
+
+            wrapper.addEventListener('touchend', (e) => {
+                if (!isDragging || isMonthSwiping) return;
+                isDragging = false;
+                wrapper.style.transition = 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                
+                const diff = startX - currentX;
+                const threshold = window.innerWidth * 0.2;
+                
+                if (diff > threshold && currentIndex < slides.length - 1) {
+                    goToSlide(currentIndex + 1);
+                } else if (diff < -threshold && currentIndex > 0) {
+                    goToSlide(currentIndex - 1);
+                } else {
+                    goToSlide(currentIndex);
+                }
+            });
+        }
+
+        timeButtons.forEach((btn, index) => {
+            btn.addEventListener('click', () => {
+                goToSlide(index);
+            });
+        });
+
+        function formatNumber(value) {
+            const number = value.replace(/[^\d,\.]/g, '');
+            const parts = number.split(/[,\.]/);
+            if (parts.length > 1) {
+                return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ',' + parts[1].substring(0, 2);
+            }
+            return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+        }
+
+        // Format editable amounts
+        document.querySelectorAll('.revenue-amount, #mainBalance').forEach(element => {
+            element.addEventListener('focus', function() {
+                this.textContent = this.textContent.replace(/[^\d,\.]/g, '');
+            });
+            
+            element.addEventListener('blur', function() {
+                const value = this.textContent.replace(/[^\d,\.]/g, '');
+                if (value) {
+                    const formatted = formatNumber(value);
+                    this.textContent = formatted + ' €';
+                    updatePercentages();
+                } else {
+                    this.textContent = '0 €';
+                }
+            });
+            
+            element.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    this.blur();
+                }
+            });
+        });
+
+        // Initialize
+        if(wrapper && slides.length > 0) {
+            goToSlide(1);
+        }
+        if(monthSlides.length > 0) {
+            showMonth(10, true); // Start at September (position 10 now), instant load
+        }
+        updatePercentages();
+        
+        // Ensure we start on home page
+        showPage('homePage');
