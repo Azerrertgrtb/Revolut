@@ -16,22 +16,22 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            position: fixed;
-            background: #000000;
-            margin: 0 !important;
-            padding: 0 !important;
+        html {
+            height: 100vh;
+            height: -webkit-fill-available;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
             background: #000000;
             color: white;
-            display: flex;
-            flex-direction: column;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            height: -webkit-fill-available;
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
             -webkit-touch-callout: none;
             -webkit-user-select: none;
             user-select: none;
@@ -812,9 +812,9 @@
 </head>
 <body>
     <!-- Page Accueil -->
-    <div class="page active" id="homePage" style="position: fixed; top: 0; left: 0; height: 100%; width: 100%; overflow: visible; background: #000; padding-bottom: env(safe-area-inset-bottom);">
-        <!-- Image ajustée pour iPhone avec safe areas -->
-        <img src="https://azerrertgrtb.github.io/Revolut/capture4.jpg" alt="Accueil" style="position: absolute; top: -20px; left: 0; width: 100%; height: calc(100% + 60px); object-fit: cover; object-position: center bottom;">
+    <div class="page active" id="homePage" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100vh; height: -webkit-fill-available; background: #000;">
+        <!-- Image optimisée pour remplir tout l'écran iPhone -->
+        <img src="https://azerrertgrtb.github.io/Revolut/capture4.jpg" alt="Accueil" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 75%;">
         
         <!-- Zone cliquable invisible sur le bouton Informations -->
         <div style="position: absolute; top: 54%; left: 37%; width: 80px; height: 80px; cursor: pointer; z-index: 10;" onclick="showPage('analyticsPage')"></div>
