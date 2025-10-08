@@ -1,0 +1,20 @@
+{
+  "name": "Revolut",
+  "short_name": "Revolut",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#000",
+  "theme_color": "#000",
+  "icons": [
+    {
+      "src": "https://play-lh.googleusercontent.com/bo7Qeq8XZVI4hyXTVyG7Oi3hMiqADqruYeyQWqzzJzNHCYNVLmpAne0XP4_JH2AJ1tE",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://play-lh.googleusercontent.com/bo7Qeq8XZVI4hyXTVyG7Oi3hMiqADqruYeyQWqzzJzNHCYNVLmpAne0XP4_JH2AJ1tE",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
