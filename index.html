@@ -808,6 +808,10 @@
             width: 100%;
             flex-shrink: 0;
         }
+
+        .mainimg {
+            height: 100vh !important;
+        }
     </style>
 </head>
 <body>
@@ -817,7 +821,7 @@
         <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 200px; background: linear-gradient(to bottom, transparent, #1a1a1a 50%, #1a1a1a)"></div>
         
         <!-- Image normale -->
-        <img src="https://azerrertgrtb.github.io/Revolut/capture4.jpg" alt="Accueil" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100vh; object-fit: contain; object-position: center top;">
+        <img class="mainimg" src="https://azerrertgrtb.github.io/Revolut/capture4.jpg" alt="Accueil" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100vh !important; object-fit: contain; object-position: center top;">
         
         <!-- Zone cliquable invisible sur le bouton Informations -->
         <div style="position: absolute; top: 54%; left: 37%; width: 80px; height: 80px; cursor: pointer; z-index: 10;" onclick="showPage('analyticsPage')"></div>
